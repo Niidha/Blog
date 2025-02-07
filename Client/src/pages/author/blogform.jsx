@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import 'react-quill/dist/quill.snow.css'; 
 import { api } from '../../axios';
 import ReactQuill from 'react-quill';
+import toast from 'react-hot-toast';
+import {  useNavigate } from 'react-router-dom';
 
 const CreateBlog = () => {
   const [title, setTitle] = useState('');
@@ -10,6 +12,7 @@ const CreateBlog = () => {
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
+  const navigate = useNavigate()
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -25,6 +28,7 @@ const CreateBlog = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    toast.success('Blog created successfully')
 
     if (!title || !content || !author || !category || !description) {
       alert('All fields are required!');
@@ -52,13 +56,29 @@ const CreateBlog = () => {
       alert('Error creating blog');
     }
   };
+  const logout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('user');
+    navigate('/');
+  };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+      <div className='m-3 flex justify-end gap-2'>
+      <button>Publish</button>
+      <button 
+            onClick={() => navigate("/myblogs")} 
+            className="px-4 py-2 bg-blue-600 text-black rounded-lg hover:bg-blue-700"
+        >
+            View My Blogs
+        </button>
+      <button onClick={logout}>log out</button>
+
+      </div>
       <h1 className="text-3xl font-bold text-center mb-6">Create Blog</h1>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
-          <label htmlFor="title" className="block text-lg font-medium mb-2">Title:</label>
+          <label htmlFor="title" className="block text-lg font-medium mb-2 ">Title:</label>
           <input 
             id="title"
             type="text" 
@@ -75,7 +95,7 @@ const CreateBlog = () => {
             type="file" 
             accept="image/*" 
             onChange={handleImageChange} 
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-gray-100 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:cursor-pointer"
           />
         </div>
         <div className="mb-4">
@@ -112,17 +132,18 @@ const CreateBlog = () => {
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="content" className="block text-lg font-medium mb-2">Content:</label>
-          <ReactQuill
+          <label htmlFor="content" className="block text-lg font-medium mb-2 ">Content:</label>
+          <ReactQuill className='w-2xl h-30'
             value={content}
             onChange={setContent}
             modules={{
               toolbar: [
-                [{ 'font': [] }, { 'header': [] }],
+                [{ 'font': [] }, { 'header': [] },],
                 [{ 'list': 'ordered' }, { 'list': 'bullet' }],
                 [{ 'align': [] }],
                 ['bold', 'italic', 'underline'],
                 ['image'],
+                
               ],
             }}
             required
@@ -130,10 +151,14 @@ const CreateBlog = () => {
         </div>
         <div className="flex justify-center">
           <button 
+        
             type="submit" 
-            className="bg-blue-500 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            className= "mt-5 text-black py-2 px-6 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
             Create Blog
           </button>
+       
+          
+          
         </div>
       </form>
     </div>

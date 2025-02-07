@@ -2,6 +2,7 @@ import { authorCollection } from "../model/author.model.mjs";
 import bcrypt from "bcrypt";
 import env from "dotenv";
 import jwt from "jsonwebtoken";
+import { blogCollection } from "../model/post.model.mjs";
 env.config();
 
 export const signUp = async (req, res) => {
@@ -45,6 +46,18 @@ export const login = async (req, res) => {
       return res.status(200).send({ message: "User logged in", user, token });
   } catch (err) {
       return res.status(500).send({ message: err.message || "Internal server error" });
+  }
+};
+export const getBlogByAuthor = async (req, res) => {
+  try {
+    const authorUsername = req.params.username
+    const blog = await blogCollection.find({ author: authorUsername });
+    res.status(200).json(blog);
+  } catch (err) {
+    res.status(500).json({
+      message: 'Error fetching courses for the provider',
+      error: err.message
+    });
   }
 };
 

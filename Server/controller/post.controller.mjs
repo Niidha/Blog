@@ -35,3 +35,26 @@ export const createBlog = async (req, res) => {
     res.status(500).json({ message: 'Error creating blog post', error: error.message });
   }
 };
+export const getBlogDetails = async (req, res) => {
+  try {
+    const { blogId } = req.params;
+
+  
+    const blog = await blogCollection.findById(blogId);
+
+    if (!blog) {
+      return res.status(404).json({ message: "Blog not found" });
+    }
+
+   
+    res.status(200).json({
+      message: "Blog details fetched successfully",
+      blog,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: 'Error fetching Blog details',
+      error: err.message
+    });
+  }
+};
