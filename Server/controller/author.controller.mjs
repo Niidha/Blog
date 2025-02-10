@@ -61,3 +61,89 @@ export const getBlogByAuthor = async (req, res) => {
   }
 };
 
+
+export const getAllAuthors = async (req, res) => {
+    try {
+        const authors = await blogCollection.distinct("author"); // Fetch unique authors
+
+        if (authors.length === 0) {
+            return res.status(404).json({ message: "No authors found" });
+        }
+
+        res.status(200).json(authors);
+    } catch (error) {
+        console.error("Error fetching authors:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+};
+
+
+export const getAuthorByUsername = async (req, res) => {
+    try {
+        const { username } = req.params;
+        const user = await authorCollection.findOne({ username });
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
+export const updateAuthorByUsername = async (req, res) => {
+  try {
+    const { username } = req.params;
+    const updatedData = req.body;
+
+    
+    const user = await authorCollection.findOne({ username });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    
+    if (updatedData.name) user.name = updatedData.name;
+    if (updatedData.email) user.email = updatedData.email;
+    if (updatedData.phone) user.phone = updatedData.phone;
+    if (updatedData.bio) user.bio = updatedData.bio;
+    if (updatedData.github) user.github = updatedData.github;
+    if (updatedData.linkedin) user.linkedin = updatedData.linkedin;
+    if (updatedData.instagram) user.instagram = updatedData.instagram;
+    if (updatedData.youtube) user.youtube = updatedData.youtube;
+
+   
+    if (updatedData.profileUrl) {
+      user.profileUrl = updatedData.profileUrl; 
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: "User updated successfully", user });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+export const deleteblog = async (req, res) => {
+  try {
+    const { id } = req.params; 
+
+    const blog = await blogCollection.findById(id);
+    if (!blog) {
+      return res.status(404).json({ message: "blog not found" });
+    }
+
+   
+    await blogCollection.findByIdAndDelete(id);
+    
+    res.status(200).json({ message: "blog deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting blog:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+

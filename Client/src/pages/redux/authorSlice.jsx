@@ -1,31 +1,31 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// Get stored user data from localStorage
+const storedUser = JSON.parse(localStorage.getItem("user")) || null;
+
 const authorSlice = createSlice({
     name: "author",
     initialState: {
-        id: "",
-        name: "",
-        username: "", 
-        email: "",
-        phone: ""
+        user: storedUser, // Load user from localStorage on page refresh
+        token: localStorage.getItem("access_token") || null,
     },
     reducers: {
         createUser: (state, action) => {
-            state.id = action.payload._id;
-            state.name = action.payload.name;
-            state.username = action.payload.username;  
-            state.email = action.payload.email;
-            state.phone = action.payload.phone;
+            state.user = action.payload;
+            localStorage.setItem("user", JSON.stringify(action.payload)); // Save to localStorage
+        },
+        setToken: (state, action) => {
+            state.token = action.payload;
+            localStorage.setItem("access_token", action.payload);
         },
         logoutUser: (state) => {
-            state.id = "";
-            state.name = "";
-            state.username = ""; 
-            state.email = "";
-            state.phone = "";
-        }
-    }
+            state.user = null;
+            state.token = null;
+            localStorage.removeItem("user");
+            localStorage.removeItem("access_token");
+        },
+    },
 });
 
-export const { createUser, logoutUser } = authorSlice.actions;
-export const { reducer: authorReducer } = authorSlice;
+export const { createUser, setToken, logoutUser } = authorSlice.actions;
+export const {reducer:authorReducer}=authorSlice

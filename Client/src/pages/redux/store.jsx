@@ -5,7 +5,7 @@ import { authorReducer } from "./authorSlice";
 
 export const store=configureStore({
     reducer:{
-        author:authorReducer,
+        author:authorReducer
         
       
     }

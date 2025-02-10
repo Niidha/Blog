@@ -23,5 +23,18 @@ const AuthorSchema=new Schema({
         type:String,
         required:[true,"Password is Required"]
     },
+    profileUrl:
+     { type: String, default: "" }, 
+    
+     bio:
+      { type: String, default: "" },
+  github:
+   { type: String, default: "" },
+  linkedin: 
+  { type: String, default: "" },
+  instagram: 
+  { type: String, default: "" },
+  youtube:
+   { type: String, default: "" },
 },{timestamps:true});
 export const authorCollection = model("authors",AuthorSchema)

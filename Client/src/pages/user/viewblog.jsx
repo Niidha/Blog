@@ -39,7 +39,7 @@ function ViewBlog() {
 
        
             {blog.imageUrl && (
-                <div className="flex justify-center mb-6">
+                <div className="flex justify-center mb-6 ">
                     <img
                         src={`http://localhost:8000/${blog.imageUrl}`}
                         alt="Blog"

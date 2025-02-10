@@ -58,3 +58,37 @@ export const getBlogDetails = async (req, res) => {
     });
   }
 };
+
+
+export const updateBlog= async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, content, author, category, imageUrl } = req.body;
+
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      id,
+      { title, description, content, author, category, imageUrl },
+      { new: true }
+    );
+
+    res.status(200).json({ blog: updatedBlog });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating blog" });
+  }
+}
+
+
+
+export const getBlogsCountByUsername = async (req, res) => {
+    try {
+        const { username } = req.params;
+
+      
+        const count = await blogCollection.countDocuments({ author: username });
+
+        res.status(200).json({ count });
+    } catch (error) {
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+};
+

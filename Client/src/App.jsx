@@ -1,7 +1,6 @@
 import { Fragment } from 'react'
-import './App.css'
 import 'tailwindcss'
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import Router from './routes/route';
 
 

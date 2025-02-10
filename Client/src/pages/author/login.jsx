@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import { useNavigate } from 'react-router';
 import { useDispatch } from "react-redux";
 import toast from 'react-hot-toast';
-import { createUser } from '../redux/authorSlice';
+import { createUser, setToken } from '../redux/authorSlice';
 import { api } from '../../axios';
 
 const Login = () => {
@@ -18,20 +18,20 @@ const Login = () => {
         onSubmit: async (values) => {
             try {
                 const { data } = await api.post("/author/login", values);
-                
                 const { userId, token, user } = data;
 
-               
-                localStorage.setItem("userId", userId);
-                localStorage.setItem("access_token", token);
+                console.log("Token received:", token);
 
+                // Store in Redux instead of localStorage directly
                 dispatch(createUser(user)); 
-                toast.success("Logged In");
-                navigate('/create')
+                dispatch(setToken(token));
+
+                toast.success("Logged In Successfully!");
+                navigate('/create');
 
             } catch (err) {
-                console.log(err.message);
-                toast.error("Login failed!");
+                console.error("Login Error:", err.response?.data?.message || err.message);
+                toast.error("Login failed! Check credentials.");
             }
         }
     });
@@ -63,7 +63,7 @@ const Login = () => {
                 />
 
                 <button 
-                    className="w-full bg-blue-600 text-black py-2 rounded-lg hover:bg-blue-700 transition duration-300" 
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition duration-300" 
                     type="submit"
                 >
                     Login

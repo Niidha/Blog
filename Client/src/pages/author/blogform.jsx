@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import 'react-quill/dist/quill.snow.css'; 
 import { api } from '../../axios';
 import ReactQuill from 'react-quill';
 import toast from 'react-hot-toast';
-import {  useNavigate } from 'react-router-dom';
+import {  Link, useNavigate} from 'react-router-dom';
+import { FaUser } from 'react-icons/fa';
 
 const CreateBlog = () => {
   const [title, setTitle] = useState('');
@@ -13,6 +14,8 @@ const CreateBlog = () => {
   const [description, setDescription] = useState('');
   const [image, setImage] = useState(null);
   const navigate = useNavigate()
+  const userProfileImage = localStorage.getItem('profileImage')
+
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -63,17 +66,28 @@ const CreateBlog = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md mt-3">
+      <div className='flex justify-between'>
+      
+      <Link to={`/profile`}>
+      <img
+        src={userProfileImage || "https://www.iconbolt.com/preview/facebook/those-icons-glyph/user-symbol-person.svg"} 
+        alt="Profile"
+        className="w-14 h-14 rounded-full object-cover"
+      />
+    </Link>
       <div className='m-3 flex justify-end gap-2'>
+      
       <button>Publish</button>
       <button 
             onClick={() => navigate("/myblogs")} 
-            className="px-4 py-2 bg-blue-600 text-black rounded-lg hover:bg-blue-700"
+            className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-700 me-2"
         >
             View My Blogs
         </button>
-      <button onClick={logout}>log out</button>
+      <button onClick={logout}   className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-700 ">log out</button>
 
+      </div>
       </div>
       <h1 className="text-3xl font-bold text-center mb-6">Create Blog</h1>
       <form onSubmit={handleSubmit}>
@@ -133,7 +147,7 @@ const CreateBlog = () => {
         </div>
         <div className="mb-4">
           <label htmlFor="content" className="block text-lg font-medium mb-2 ">Content:</label>
-          <ReactQuill className='w-2xl h-30'
+          <ReactQuill className='w-3xl h-30'
             value={content}
             onChange={setContent}
             modules={{
@@ -153,7 +167,7 @@ const CreateBlog = () => {
           <button 
         
             type="submit" 
-            className= "mt-5 text-black py-2 px-6 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            className= "mt-9 text-white bg-blue-900 py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
             Create Blog
           </button>
        
