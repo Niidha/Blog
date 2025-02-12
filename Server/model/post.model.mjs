@@ -31,7 +31,11 @@ const blogSchema = new Schema({
         type: Date, 
         default: () => new Date().toISOString().split("T")[0],
     required:[true,"Date is Required"]
+    },
+    published: { 
+        type: Boolean, 
+        default: false  
     }
   });
   
-  export const blogCollection = model("BlogPost", blogSchema);
+  export const blogCollection = model("blogposts", blogSchema);

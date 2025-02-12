@@ -1,178 +1,194 @@
-import React, { useMemo, useState } from 'react';
-import 'react-quill/dist/quill.snow.css'; 
-import { api } from '../../axios';
-import ReactQuill from 'react-quill';
-import toast from 'react-hot-toast';
-import {  Link, useNavigate} from 'react-router-dom';
-import { FaUser } from 'react-icons/fa';
+import React, { useState } from "react";
+import "react-quill/dist/quill.snow.css";
+import { api } from "../../axios";
+import ReactQuill from "react-quill";
+import toast from "react-hot-toast";
+import { Link, useNavigate } from "react-router-dom";
 
 const CreateBlog = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
-  const [author, setAuthor] = useState('');
-  const [category, setCategory] = useState('');
-  const [description, setDescription] = useState('');
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [author, setAuthor] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
-  const navigate = useNavigate()
-  const userProfileImage = localStorage.getItem('profileImage')
+  const [isPublished, setIsPublished] = useState(false);
+  const navigate = useNavigate();
+  const userProfileImage = localStorage.getItem("profileImage");
 
-
+  // Handle file selection
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-       
-        setImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setImage(file); // Store file instead of converting to Base64
     }
   };
 
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success('Blog created successfully')
 
     if (!title || !content || !author || !category || !description) {
-      alert('All fields are required!');
+      toast.error("All fields are required!");
       return;
     }
 
-    const blogData = {
-      title,
-      content,
-      author,
-      category,
-      description,
-      image: image || null, 
-    };
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("content", content);
+    formData.append("author", author);
+    formData.append("category", category);
+    formData.append("description", description);
+    if (image) formData.append("image", image); // Append only if image exists
+    formData.append("published", isPublished);
 
     try {
-      const response = await api.post('/author/createblog', blogData, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
+      const response = await api.post("/author/createblog", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
-      alert('Blog created successfully!');
+
+      toast.success("Blog created successfully!");
+      navigate("/myblogs");
+
+      if (isPublished) {
+        await togglePublish(response.data._id); // Publish after creation if needed
+      }
     } catch (error) {
-      console.error('Error creating blog:', error);
-      alert('Error creating blog');
+      console.error("Error creating blog:", error);
+      toast.error("Error creating blog");
     }
   };
+
+  // Toggle publish status
+  const togglePublish = async (blogId) => {
+    try {
+      const response = await api.put(`/author/publish/${blogId}`);
+      setIsPublished(response.data.published);
+      toast.success(response.data.published ? "Blog published!" : "Blog unpublished!");
+    } catch (error) {
+      console.error("Error updating publish status:", error);
+      toast.error("Error updating publish status");
+    }
+  };
+
+  // Logout function
   const logout = () => {
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('user');
-    navigate('/');
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user");
+    navigate("/");
   };
 
   return (
     <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md mt-3">
-      <div className='flex justify-between'>
-      
-      <Link to={`/profile`}>
-      <img
-        src={userProfileImage || "https://www.iconbolt.com/preview/facebook/those-icons-glyph/user-symbol-person.svg"} 
-        alt="Profile"
-        className="w-14 h-14 rounded-full object-cover"
-      />
-    </Link>
-      <div className='m-3 flex justify-end gap-2'>
-      
-      <button>Publish</button>
-      <button 
-            onClick={() => navigate("/myblogs")} 
+      <div className="flex justify-between">
+        <Link to={`/profile`}>
+          <img
+            src={
+              userProfileImage ||
+              "https://www.iconbolt.com/preview/facebook/those-icons-glyph/user-symbol-person.svg"
+            }
+            alt="Profile"
+            className="w-14 h-14 rounded-full object-cover"
+          />
+        </Link>
+        <div className="m-3 flex justify-end gap-2">
+          <button
+            onClick={() => setIsPublished((prev) => !prev)}
+            className={`px-4 py-2 rounded-lg shadow-md ${
+              isPublished ? "bg-green-600 text-white" : "bg-red-600 text-white"
+            }`}
+          >
+            {isPublished ? "Unpublish" : "Publish"}
+          </button>
+          <button
+            onClick={() => navigate("/myblogs")}
             className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-700 me-2"
-        >
+          >
             View My Blogs
-        </button>
-      <button onClick={logout}   className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-700 ">log out</button>
-
-      </div>
+          </button>
+          <button
+            onClick={logout}
+            className="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-700"
+          >
+            Log out
+          </button>
+        </div>
       </div>
       <h1 className="text-3xl font-bold text-center mb-6">Create Blog</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
         <div className="mb-4">
-          <label htmlFor="title" className="block text-lg font-medium mb-2 ">Title:</label>
-          <input 
-            id="title"
-            type="text" 
-            value={title} 
-            onChange={(e) => setTitle(e.target.value)} 
-            required 
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <label className="block text-lg font-medium mb-2">Title:</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="image" className="block text-lg font-medium mb-2">Image:</label>
-          <input 
-            id="image"
-            type="file" 
-            accept="image/*" 
-            onChange={handleImageChange} 
-            className="w-full bg-gray-100 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 hover:cursor-pointer"
+          <label className="block text-lg font-medium mb-2">Image:</label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            className="w-full bg-gray-100 p-2 border border-gray-300 rounded-md"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="author" className="block text-lg font-medium mb-2">Author:</label>
-          <input 
-            id="author"
-            type="text" 
-            value={author} 
-            onChange={(e) => setAuthor(e.target.value)} 
-            required 
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <label className="block text-lg font-medium mb-2">Author:</label>
+          <input
+            type="text"
+            value={author}
+            onChange={(e) => setAuthor(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="category" className="block text-lg font-medium mb-2">Category:</label>
-          <input 
-            id="category"
-            type="text" 
-            value={category} 
-            onChange={(e) => setCategory(e.target.value)} 
-            required 
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <label className="block text-lg font-medium mb-2">Category:</label>
+          <input
+            type="text"
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="description" className="block text-lg font-medium mb-2">Description:</label>
-          <input 
-            id="description"
-            type="text" 
-            value={description} 
-            onChange={(e) => setDescription(e.target.value)} 
-            required 
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          <label className="block text-lg font-medium mb-2">Description:</label>
+          <input
+            type="text"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
           />
         </div>
         <div className="mb-4">
-          <label htmlFor="content" className="block text-lg font-medium mb-2 ">Content:</label>
-          <ReactQuill className='w-3xl h-30'
+          <label className="block text-lg font-medium mb-2">Content:</label>
+          <ReactQuill
             value={content}
             onChange={setContent}
             modules={{
               toolbar: [
-                [{ 'font': [] }, { 'header': [] },],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'align': [] }],
-                ['bold', 'italic', 'underline'],
-                ['image'],
-                
+                [{ font: [] }, { header: [] }],
+                [{ list: "ordered" }, { list: "bullet" }],
+                [{ align: [] }],
+                ["bold", "italic", "underline"],
+                ["image"],
               ],
             }}
             required
           />
         </div>
         <div className="flex justify-center">
-          <button 
-        
-            type="submit" 
-            className= "mt-9 text-white bg-blue-900 py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <button
+            type="submit"
+            className="mt-4 text-white bg-blue-900 py-2 px-6 rounded-lg hover:bg-blue-700"
+          >
             Create Blog
           </button>
-       
-          
-          
         </div>
       </form>
     </div>

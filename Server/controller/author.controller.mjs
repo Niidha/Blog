@@ -3,6 +3,7 @@ import bcrypt from "bcrypt";
 import env from "dotenv";
 import jwt from "jsonwebtoken";
 import { blogCollection } from "../model/post.model.mjs";
+
 env.config();
 
 export const signUp = async (req, res) => {
@@ -18,7 +19,7 @@ export const signUp = async (req, res) => {
       return res.status(400).send({ message: "Bad request" });
     }
     response.password = null;
-    const token = jwt.sign({ sub: response }, process.env.JWT_KEY, { expiresIn: "30d" });
+    const token = jwt.sign({ sub: response }, process.env.JWT_KEY, { expiresIn: "15d" });
     return res.status(201).send({ message: "User created!", user: response, token });
   } catch (err) {
     return res.status(500).send({ message: err.message || "Internal server error" });
@@ -41,7 +42,7 @@ export const login = async (req, res) => {
       }
 
       user.password = undefined;
-      const token = jwt.sign({ sub: user }, process.env.JWT_KEY, { expiresIn: "7d" });
+      const token = jwt.sign({ sub: user }, process.env.JWT_KEY, { expiresIn: "15d" });
 
       return res.status(200).send({ message: "User logged in", user, token });
   } catch (err) {
@@ -64,7 +65,7 @@ export const getBlogByAuthor = async (req, res) => {
 
 export const getAllAuthors = async (req, res) => {
     try {
-        const authors = await blogCollection.distinct("author"); // Fetch unique authors
+        const authors = await blogCollection.distinct("author"); 
 
         if (authors.length === 0) {
             return res.status(404).json({ message: "No authors found" });
@@ -86,36 +87,32 @@ export const getAuthorByUsername = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
+            res.status(200).json(user);
 
-        res.status(200).json(user);
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }
 };
+
+
 export const updateAuthorByUsername = async (req, res) => {
   try {
     const { username } = req.params;
     const updatedData = req.body;
-
-    
     const user = await authorCollection.findOne({ username });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    
-    if (updatedData.name) user.name = updatedData.name;
-    if (updatedData.email) user.email = updatedData.email;
-    if (updatedData.phone) user.phone = updatedData.phone;
-    if (updatedData.bio) user.bio = updatedData.bio;
-    if (updatedData.github) user.github = updatedData.github;
-    if (updatedData.linkedin) user.linkedin = updatedData.linkedin;
-    if (updatedData.instagram) user.instagram = updatedData.instagram;
-    if (updatedData.youtube) user.youtube = updatedData.youtube;
+    // Update fields from request body
+    ["name", "email", "phone", "bio", "github", "linkedin", "instagram", "youtube"].forEach(field => {
+      if (updatedData[field]) user[field] = updatedData[field];
+    });
 
-   
-    if (updatedData.profileUrl) {
-      user.profileUrl = updatedData.profileUrl; 
+    // Handle Image Upload
+    if (req.file) {
+      user.profileUrl = `uploads/profiles/${req.file.filename}`;
     }
 
     await user.save();
@@ -125,6 +122,7 @@ export const updateAuthorByUsername = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 export const deleteblog = async (req, res) => {
   try {
     const { id } = req.params; 
@@ -144,6 +142,25 @@ export const deleteblog = async (req, res) => {
   }
 };
 
+
+
+
+export const getauthorProfileUrl = async (req, res) => {
+    try {
+        const { userId } = req.params;
+
+        const user = await authorCollection.findById(userId).select("profileUrl");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json({ profileUrl: user.profileUrl });
+    } catch (error) {
+        console.error("Error fetching profile URL:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 
 
 

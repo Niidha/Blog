@@ -1,23 +1,9 @@
 import { blogCollection } from '../model/post.model.mjs';
-import fs from "fs";
+
 
 export const createBlog = async (req, res) => {
-  const { title, content, author, category, description, image } = req.body;
-
-  let imageUrl = null;
-
-  if (image) {
-    const base64Data = image.split(',')[1];
-    const filePath = `uploads/${Date.now()}.png`;
-    
-
-    try {
-      fs.writeFileSync(filePath, base64Data, 'base64');
-      imageUrl = filePath;
-    } catch (err) {
-      return res.status(500).json({ message: 'Error saving image', error: err.message });
-    }
-  }
+  const { title, content, author, category, description } = req.body;
+  let imageUrl = req.file ? `uploads/${req.file.filename}` : null; 
 
   try {
     const newBlog = new blogCollection({
@@ -26,15 +12,15 @@ export const createBlog = async (req, res) => {
       author,
       category,
       description,
-      imageUrl: imageUrl || '',
+      imageUrl
     });
 
     await newBlog.save();
-    res.status(201).json({ message: 'Blog created successfully', blog: newBlog });
+    res.status(201).json({ message: "Blog created successfully", blog: newBlog });
   } catch (error) {
-    res.status(500).json({ message: 'Error creating blog post', error: error.message });
+    res.status(500).json({ message: "Error creating blog post", error: error.message });
   }
-};
+}
 export const getBlogDetails = async (req, res) => {
   try {
     const { blogId } = req.params;
@@ -60,23 +46,24 @@ export const getBlogDetails = async (req, res) => {
 };
 
 
-export const updateBlog= async (req, res) => {
+export const updateBlog = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, content, author, category, imageUrl } = req.body;
+    const { title, description, content, author, category } = req.body;
 
-    const updatedBlog = await Blog.findByIdAndUpdate(
-      id,
-      { title, description, content, author, category, imageUrl },
-      { new: true }
-    );
+    let updateFields = { title, description, content, author, category };
 
-    res.status(200).json({ blog: updatedBlog });
+    if (req.file) {
+      updateFields.imageUrl = `/uploads/${req.file.filename}`;
+    }
+
+    const updatedBlog = await blogCollection.findByIdAndUpdate(id, updateFields, { new: true });
+
+    res.status(200).json({ message: "Blog updated successfully", blog: updatedBlog });
   } catch (error) {
-    res.status(500).json({ message: "Error updating blog" });
+    res.status(500).json({ message: "Error updating blog", error: error.message });
   }
-}
-
+};
 
 
 export const getBlogsCountByUsername = async (req, res) => {
@@ -91,4 +78,27 @@ export const getBlogsCountByUsername = async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 };
+
+
+
+
+export const PublishBlog=async (req, res) => {
+    try {
+        const blogId = req.params.id;
+        const blog = await blogCollection.findById(blogId);
+
+        if (!blog) {
+            return res.status(404).json({ message: "Blog post not found" });
+        }
+
+      
+        blog.published = !blog.published;
+        await blog.save();
+
+        res.status(200).json({ message: "Publish status updated", published: blog.published });
+    } catch (error) {
+        res.status(500).json({ message: "Error updating publish status", error });
+    }
+}
+
 

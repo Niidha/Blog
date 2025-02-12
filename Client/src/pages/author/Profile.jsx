@@ -5,8 +5,7 @@ import { FaTrash, FaGithub, FaLinkedin, FaYoutube, FaInstagram } from "react-ico
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.author.user);
-  const username = user?.username || "User";
-
+  const username = user?.username || "User"
   const [profile, setProfile] = useState({});
   const [blogsCount, setBlogsCount] = useState(0);
   const [editMode, setEditMode] = useState(false);

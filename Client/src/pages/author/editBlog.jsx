@@ -67,7 +67,7 @@ const EditBlog = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.patch(`/author/editblog/${id}`, blog);
+      await api.put(`/author/editblog/${id}`, blog);
       toast.success("Blog updated successfully!");
       navigate("/myblogs");
     } catch (error) {

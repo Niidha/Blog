@@ -28,6 +28,25 @@ function BlogsByAuthor() {
         fetchBlogs();   
     }, [username]);
 
+    // Function to toggle publish status
+    const handlePublishToggle = async (blogId, currentStatus) => {
+        try {
+            const response = await api.put(`/author/publish/${blogId}`);
+            const updatedStatus = response.data.published;
+
+            setBlogs((prevBlogs) => 
+                prevBlogs.map((blog) => 
+                    blog._id === blogId ? { ...blog, published: updatedStatus } : blog
+                )
+            );
+
+            toast.success(`Blog ${updatedStatus ? "Published" : "Unpublished"} successfully!`);
+        } catch (error) {
+            console.error("Error updating publish status:", error);
+            toast.error("Failed to update publish status.");
+        }
+    };
+
     const handleDelete = async () => {
         if (!confirmDelete) return;
 
@@ -61,7 +80,7 @@ function BlogsByAuthor() {
                             className="bg-gray-100 rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:scale-105 hover:shadow-2xl"
                         >
                             <img 
-                                src={`http://localhost:8000/${blog.imageUrl}`}
+                                src={`http://localhost:9090/${blog.imageUrl}`}
                                 alt={blog.title} 
                                 className="w-full h-48 object-cover"
                             />
@@ -69,7 +88,10 @@ function BlogsByAuthor() {
                                 <h2 className="text-xl font-bold text-gray-800 mb-2">{blog.title}</h2>
                                 <p className="text-sm text-gray-600 mb-2">Category: {blog.category || "Uncategorized"}</p>
                                 <p className="text-sm text-gray-500">Created At: {blog.createdAt ? blog.createdAt.split("T")[0] : "Unknown"}</p>
-                                 
+                                <p className={`text-sm font-bold ${blog.published ? "text-green-500" : "text-red-500"}`}>
+                                    Status: {blog.published ? "Published" : "Unpublished"}
+                                </p>
+                                
                                 <Link
                                   to={`/viewblog/${blog._id}`} 
                                   className="block text-center mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 no-underline"
@@ -86,6 +108,15 @@ function BlogsByAuthor() {
                                         Delete
                                     </button>
                                 </div>
+
+                                <button 
+                                    onClick={() => handlePublishToggle(blog._id, blog.published)}
+                                    className={`block mt-3 w-full px-4 py-2 text-white rounded-lg ${
+                                        blog.published ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"
+                                    } transition duration-300`}
+                                >
+                                    {blog.published ? "Published" : "Publish"}
+                                </button>
                             </div>
                         </div>
                     ))}

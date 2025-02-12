@@ -10,7 +10,7 @@ function ViewBlog() {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await axios.get(`http://localhost:8000/blog/${id}`);
+                const response = await axios.get(`http://localhost:9090/blog/${id}`);
                 setBlog(response.data.blog);
             } catch (err) {
                 console.error("Error fetching blog details:", err);
@@ -41,7 +41,7 @@ function ViewBlog() {
             {blog.imageUrl && (
                 <div className="flex justify-center mb-6 ">
                     <img
-                        src={`http://localhost:8000/${blog.imageUrl}`}
+                        src={`http://localhost:9090/${blog.imageUrl}`}
                         alt="Blog"
                         className="w-full max-h-[450px] object-cover rounded-lg shadow-md"
                     />

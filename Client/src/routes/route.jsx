@@ -9,19 +9,22 @@ import BlogsByAuthor from "../pages/author/viewMyblog"
 import ProfilePage from "../pages/author/Profile"
 import UpdateBlog from "../pages/author/editBlog"
 
+import AuthorDetails from "../pages/user/authorprofile"
+
 
 const Router = () => {
     return <BrowserRouter>
         <Routes>
             
-                <Route path="/create" element={<ProtectedRoute><BlogForm/></ProtectedRoute>} />
+                <Route path="/create" element={<BlogForm/>} />
                 <Route path="/myblogs" element={<ProtectedRoute><BlogsByAuthor/></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>} />
+                <Route path="/profile" element={<ProfilePage/>} />
                 <Route path="/" element={<BlogList/>} />
                 <Route path="/editblog/:id" element={<UpdateBlog/>} />
                 <Route path="/viewblog/:id" element={<ViewBlog/>} />
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/signup" element={ <Signup/>} />
+                <Route path="/details/:username" element={ <AuthorDetails/>} />
               
         </Routes>
     </BrowserRouter>

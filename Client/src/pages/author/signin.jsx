@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { createUser } from '../redux/authorSlice';
+import axios from 'axios';
 
 const Signup = () => {
     const navigate = useNavigate();
@@ -22,7 +23,7 @@ const Signup = () => {
         
         onSubmit: async (values) => {
             try {
-                const { data } = await api.post('/author/signup', values);
+                const { data } = await axios.post('http://localhost:9090/blog/author/signup', values);
                 console.log(data.token);
                 localStorage.setItem('access_token', data.token);
                 dispatch(createUser(data.user));
