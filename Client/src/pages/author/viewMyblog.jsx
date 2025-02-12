@@ -1,23 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../../axios";
 import toast from "react-hot-toast";
 
 function BlogsByAuthor() {
     const user = useSelector((state) => state.author.user);
+    const token = useSelector((state) => state.author.token);
+    const navigate = useNavigate();
+    
     const username = user?.username;
-
     const [blogs, setBlogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(null);
 
+    // Redirect if not authenticated
+    useEffect(() => {
+        if (!token) {
+            toast.error("You must be logged in to view this page.");
+            navigate("/login");
+        }
+    }, [token, navigate]);
+
     useEffect(() => {
         const fetchBlogs = async () => {
-            if (!username) return;
+            if (!username || !token) return;
             try {
-                const response = await api.get(`/author/${username}`);
+                const response = await api.get(`/author/${username}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
                 setBlogs(response.data);
             } catch (err) {
                 setError("Error fetching blogs.");
@@ -25,13 +37,14 @@ function BlogsByAuthor() {
                 setLoading(false);
             }
         };
-        fetchBlogs();   
-    }, [username]);
+        fetchBlogs();
+    }, [username, token]);
 
-    // Function to toggle publish status
-    const handlePublishToggle = async (blogId, currentStatus) => {
+    const handlePublishToggle = async (blogId) => {
         try {
-            const response = await api.put(`/author/publish/${blogId}`);
+            const response = await api.put(`/author/publish/${blogId}`, {}, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             const updatedStatus = response.data.published;
 
             setBlogs((prevBlogs) => 
@@ -51,7 +64,9 @@ function BlogsByAuthor() {
         if (!confirmDelete) return;
 
         try {
-            await api.delete(`/author/delete/${confirmDelete}`);
+            await api.delete(`/author/delete/${confirmDelete}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
             toast.success("Blog deleted successfully!");
             setBlogs((prevBlogs) => prevBlogs.filter((blog) => blog._id !== confirmDelete));
             setConfirmDelete(null);
@@ -110,7 +125,7 @@ function BlogsByAuthor() {
                                 </div>
 
                                 <button 
-                                    onClick={() => handlePublishToggle(blog._id, blog.published)}
+                                    onClick={() => handlePublishToggle(blog._id)}
                                     className={`block mt-3 w-full px-4 py-2 text-white rounded-lg ${
                                         blog.published ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"
                                     } transition duration-300`}

@@ -7,6 +7,8 @@ import userRoute from "./route/user.route.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
 
+import blogrouter from "./route/route.mjs";
+
 env.config();
 
 // ✅ Connect to Database
@@ -41,6 +43,7 @@ const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/blog/author", authorRoute);
 app.use("/blog", userRoute);
+app.use("/get" ,blogrouter)
 
 // ✅ Start Server
 const PORT = process.env.PORT || 9090;

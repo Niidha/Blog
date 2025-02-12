@@ -9,7 +9,7 @@ function BlogList() {
 
     useEffect(() => {
         axios
-            .post("http://localhost:9090/blog/author/blogs",  {
+            .get("http://localhost:9090/get/blogs",  {
                 headers: { "Content-Type": "application/json" }
             })
             .then((res) => {
