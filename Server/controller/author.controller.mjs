@@ -95,33 +95,46 @@ export const getAuthorByUsername = async (req, res) => {
 };
 
 
+import { fileURLToPath } from "url";
+import path from "path";
+import fs from "fs";
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename); 
+
 export const updateAuthorByUsername = async (req, res) => {
   try {
     const { username } = req.params;
     const updatedData = req.body;
-    const user = await authorCollection.findOne({ username });
 
+    const user = await authorCollection.findOne({ username });
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    // Update fields from request body
     ["name", "email", "phone", "bio", "github", "linkedin", "instagram", "youtube"].forEach(field => {
-      if (updatedData[field]) user[field] = updatedData[field];
+      if (updatedData[field] !== undefined) user[field] = updatedData[field];
     });
 
-    // Handle Image Upload
     if (req.file) {
-      user.profileUrl = `uploads/profiles/${req.file.filename}`;
+      const imageType = req.body.imageType || "profile";
+      const folder = imageType === "profile" ? "uploads/profiles" : "uploads";
+    
+      if (!fs.existsSync(path.join(__dirname, folder))) {
+        fs.mkdirSync(path.join(__dirname, folder), { recursive: true });
+      }
+    
+      user.profileUrl = `${folder}/${req.file.filename}`; 
     }
-
+    
     await user.save();
-
     res.status(200).json({ message: "User updated successfully", user });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 export const deleteblog = async (req, res) => {
   try {

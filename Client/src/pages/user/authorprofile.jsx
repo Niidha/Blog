@@ -33,7 +33,7 @@ function AuthorDetails() {
         <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
             <div className="flex flex-col items-center text-center">
                 {author.profileUrl ? (
-                    <img src={author.profileUrl} alt={author.name} className="w-32 h-32 rounded-full shadow-md mb-4" />
+                    <img src={`http://localhost:9090/${author.profileUrl}`} alt={author.name} className="w-32 h-32 rounded-full shadow-md mb-4" />
                 ) : (
                     <div className="w-32 h-32 rounded-full bg-gray-300 flex items-center justify-center text-gray-700 font-bold text-lg mb-4">
                         No Image

@@ -85,7 +85,7 @@ function BlogList() {
                                         {authors[blog.author] ? (
                                             <Link to={`/details/${blog.author}`} className="flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-blue-200">
                                                 <img
-                                                    src={authors[blog.author].profileUrl || "https://via.placeholder.com/40"}
+                                                    src={ `http://localhost:9090/${authors[blog.author].profileUrl}` || "https://via.placeholder.com/40"}
                                                     alt={authors[blog.author].name}
                                                     className="w-8 h-8 rounded-full"
                                                 />
