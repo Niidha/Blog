@@ -31,4 +31,5 @@ authorRoute.get("/blogcount/:username", getBlogsCountByUsername);
 authorRoute.get("/:username",Auth, getBlogByAuthor);
 
 
+
 export default authorRoute;

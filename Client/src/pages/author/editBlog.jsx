@@ -31,7 +31,7 @@ const EditBlog = () => {
             content: fetchedBlog.content || "",
             author: fetchedBlog.author || "",
             category: fetchedBlog.category || "",
-            imageUrl: fetchedBlog.imageUrl || "",
+            imageUrl: `http://localhost:9090/${fetchedBlog.imageUrl} `|| "",
           });
         }
       } catch (error) {

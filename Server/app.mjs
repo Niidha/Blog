@@ -43,7 +43,7 @@ const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/blog/author", authorRoute);
 app.use("/blog", userRoute);
-app.use("/get" ,blogrouter)
+app.use("/blog/get" ,blogrouter)
 
 // ✅ Start Server
 const PORT = process.env.PORT || 9090;

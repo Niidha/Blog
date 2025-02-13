@@ -16,13 +16,24 @@ blogrouter.get("/blogs", async (req, res) => {
 });
 
 // 🔹 Protected Route (Requires Auth)
-blogrouter.post("/blog/create", Auth, upload.single("image"), async (req, res) => {
-    try {
-        const newBlog = new blogCollection({ ...req.body, author: req.user.id });
+blogrouter.post("/create", Auth, upload.single("image"), async (req, res) => {
+    const { title, content, author, category, description } = req.body;
+      let imageUrl = req.file ? `uploads/${req.file.filename}` : null; 
+    
+      try {
+        const newBlog = new blogCollection({
+          title,
+          content,
+          author,
+          category,
+          description,
+          imageUrl
+        });
+    
         await newBlog.save();
-        res.status(201).json({ message: "Blog created successfully" });
-    } catch (error) {
-        res.status(500).json({ message: "Error creating blog" });
-    }
+        res.status(201).json({ message: "Blog created successfully", blog: newBlog });
+      } catch (error) {
+        res.status(500).json({ message: "Error creating blog post", error: error.message });
+      }
 });
 export default blogrouter;

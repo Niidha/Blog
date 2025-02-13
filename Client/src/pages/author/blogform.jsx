@@ -43,7 +43,7 @@ const CreateBlog = () => {
     formData.append("published", isPublished);
 
     try {
-      const response = await api.post("/author/createblog", formData, {
+      const response = await api.post("/get/create", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
