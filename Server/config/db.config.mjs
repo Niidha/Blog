@@ -6,7 +6,7 @@ env.config();
 const dbConnect = async () => {
     try {
         const connection = await connect(process.env.MONGO_URL, {
-            dbName: "Blog", // ✅ Use `dbName` directly
+            dbName: "Blog", 
         });
 
         console.log("Connected to database:", connection.connection.db.databaseName);

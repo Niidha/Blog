@@ -11,7 +11,7 @@ import blogrouter from "./route/route.mjs";
 
 env.config();
 
-// ✅ Connect to Database
+
 try {
     await dbConnect();
     console.log("✅ Database connected successfully.");
@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-// ✅ CORS Middleware (Fixed)
+
 app.use(cors());
 
 // ✅ Ensure CORS Headers on All Responses

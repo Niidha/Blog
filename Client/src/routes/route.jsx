@@ -16,11 +16,11 @@ const Router = () => {
     return <BrowserRouter>
         <Routes>
             
-                <Route path="/create" element={<BlogForm/>} />
+                <Route path="/create" element={<ProtectedRoute><BlogForm/></ProtectedRoute>} />
                 <Route path="/myblogs" element={<ProtectedRoute><BlogsByAuthor/></ProtectedRoute>} />
-                <Route path="/profile" element={<ProfilePage/>} />
+                <Route path="/profile" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>} />
                 <Route path="/" element={<BlogList/>} />
-                <Route path="/editblog/:id" element={<UpdateBlog/>} />
+                <Route path="/editblog/:id" element={<ProtectedRoute><UpdateBlog/></ProtectedRoute>} />
                 <Route path="/viewblog/:id" element={<ViewBlog/>} />
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/signup" element={ <Signup/>} />

@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { Auth } from "../middleware/auth.mjs";
 import { upload } from "../middleware/upload.mjs";
-
 import { blogCollection } from "../model/post.model.mjs";
 
 
@@ -15,7 +14,7 @@ blogrouter.get("/blogs", async (req, res) => {
     }
 });
 
-// 🔹 Protected Route (Requires Auth)
+
 blogrouter.post("/create", Auth, upload.single("image"), async (req, res) => {
     const { title, content, author, category, description } = req.body;
       let imageUrl = req.file ? `uploads/${req.file.filename}` : null; 

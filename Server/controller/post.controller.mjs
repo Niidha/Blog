@@ -1,7 +1,5 @@
 import { blogCollection } from '../model/post.model.mjs';
 
-
-
 export const getBlogDetails = async (req, res) => {
   try {
     const { blogId } = req.params;
@@ -49,9 +47,7 @@ export const updateBlog = async (req, res) => {
 
 export const getBlogsCountByUsername = async (req, res) => {
     try {
-        const { username } = req.params;
-
-      
+        const { username } = req.params;      
         const count = await blogCollection.countDocuments({ author: username });
 
         res.status(200).json({ count });

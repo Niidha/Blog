@@ -16,15 +16,15 @@ const CreateBlog = () => {
   const navigate = useNavigate();
   const userProfileImage = localStorage.getItem("profileImage");
 
-  // Handle file selection
+
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImage(file); // Store file instead of converting to Base64
+      setImage(file); 
     }
   };
 
-  // Handle form submission
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,7 +39,7 @@ const CreateBlog = () => {
     formData.append("author", author);
     formData.append("category", category);
     formData.append("description", description);
-    if (image) formData.append("image", image); // Append only if image exists
+    if (image) formData.append("image", image); 
     formData.append("published", isPublished);
 
     try {
@@ -51,7 +51,7 @@ const CreateBlog = () => {
       navigate("/myblogs");
 
       if (isPublished) {
-        await togglePublish(response.data._id); // Publish after creation if needed
+        await togglePublish(response.data._id); 
       }
     } catch (error) {
       console.error("Error creating blog:", error);
@@ -59,7 +59,7 @@ const CreateBlog = () => {
     }
   };
 
-  // Toggle publish status
+  
   const togglePublish = async (blogId) => {
     try {
       const response = await api.put(`/author/publish/${blogId}`);
@@ -71,7 +71,7 @@ const CreateBlog = () => {
     }
   };
 
-  // Logout function
+  
   const logout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");

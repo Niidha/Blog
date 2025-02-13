@@ -80,7 +80,7 @@ const EditBlog = () => {
       <h1 className="text-3xl font-bold text-center mb-6">Edit Blog</h1>
       <form onSubmit={handleSubmit}>
         
-        {/* Title */}
+       
         <div className="mb-4">
           <label className="block text-lg font-medium mb-2">Title:</label>
           <input
@@ -93,7 +93,7 @@ const EditBlog = () => {
           />
         </div>
 
-        {/* Description */}
+   
         <div className="mb-4">
           <label className="block text-lg font-medium mb-2">Description:</label>
           <input
@@ -106,7 +106,7 @@ const EditBlog = () => {
           />
         </div>
 
-        {/* Content */}
+   
         <div className="mb-4">
           <label className="block text-lg font-medium mb-2">Content:</label>
           <ReactQuill 
@@ -125,7 +125,7 @@ const EditBlog = () => {
           />
         </div>
 
-        {/* Author */}
+      
         <div className="mb-4">
           <label className="block text-lg font-medium mb-2">Author:</label>
           <input
@@ -138,7 +138,7 @@ const EditBlog = () => {
           />
         </div>
 
-        {/* Category */}
+   
         <div className="mb-4">
           <label className="block text-lg font-medium mb-2">Category:</label>
           <input
@@ -151,7 +151,7 @@ const EditBlog = () => {
           />
         </div>
 
-        {/* Image Upload */}
+        
         <div className="mb-4">
           <label className="block text-lg font-medium mb-2">Image:</label>
           <input
@@ -169,7 +169,6 @@ const EditBlog = () => {
           )}
         </div>
 
-        {/* Submit Button */}
         <div className="flex justify-center">
           <button
             type="submit"

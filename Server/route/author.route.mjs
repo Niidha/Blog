@@ -1,14 +1,6 @@
 import { Router } from "express";
-import { 
-    deleteblog, 
-    getAllAuthors, 
-    getAuthorByUsername, 
-    getauthorProfileUrl, 
-    getBlogByAuthor,  
-    login, 
-signUp, updateAuthorByUsername } from "../controller/author.controller.mjs";
-import {   getBlogsCountByUsername, PublishBlog,  updateBlog } from "../controller/post.controller.mjs";
-
+import { deleteblog, getAllAuthors, getAuthorByUsername,  getBlogByAuthor,  login, signUp, updateAuthorByUsername } from "../controller/author.controller.mjs";
+import { getBlogsCountByUsername, PublishBlog,  updateBlog } from "../controller/post.controller.mjs";
 import { Auth } from "../middleware/auth.mjs";
 import { upload } from "../middleware/upload.mjs";
 
@@ -19,7 +11,7 @@ authorRoute.post("/signup", signUp);
 authorRoute.post("/login", login);
 authorRoute.get("/details/:username", getAuthorByUsername);
 authorRoute.patch("/update/:username", Auth,upload.single("image"), updateAuthorByUsername);
-authorRoute.get("/profileUrl/:userId", getauthorProfileUrl);
+// authorRoute.get("/profileUrl/:userId", getauthorProfileUrl);
 authorRoute.get("/", getAllAuthors);
 
 //  Blog Management

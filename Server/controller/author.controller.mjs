@@ -3,7 +3,9 @@ import bcrypt from "bcrypt";
 import env from "dotenv";
 import jwt from "jsonwebtoken";
 import { blogCollection } from "../model/post.model.mjs";
-
+import { fileURLToPath } from "url";
+import path from "path";
+import fs from "fs";
 env.config();
 
 export const signUp = async (req, res) => {
@@ -95,11 +97,6 @@ export const getAuthorByUsername = async (req, res) => {
 };
 
 
-import { fileURLToPath } from "url";
-import path from "path";
-import fs from "fs";
-
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename); 
 
@@ -144,8 +141,6 @@ export const deleteblog = async (req, res) => {
     if (!blog) {
       return res.status(404).json({ message: "blog not found" });
     }
-
-   
     await blogCollection.findByIdAndDelete(id);
     
     res.status(200).json({ message: "blog deleted successfully" });
@@ -156,24 +151,22 @@ export const deleteblog = async (req, res) => {
 };
 
 
+// export const getauthorProfileUrl = async (req, res) => {
+//     try {
+//         const { userId } = req.params;
 
+//         const user = await authorCollection.findById(userId).select("profileUrl");
 
-export const getauthorProfileUrl = async (req, res) => {
-    try {
-        const { userId } = req.params;
+//         if (!user) {
+//             return res.status(404).json({ message: "User not found" });
+//         }
 
-        const user = await authorCollection.findById(userId).select("profileUrl");
-
-        if (!user) {
-            return res.status(404).json({ message: "User not found" });
-        }
-
-        res.status(200).json({ profileUrl: user.profileUrl });
-    } catch (error) {
-        console.error("Error fetching profile URL:", error);
-        res.status(500).json({ message: "Internal Server Error" });
-    }
-};
+//         res.status(200).json({ profileUrl: user.profileUrl });
+//     } catch (error) {
+//         console.error("Error fetching profile URL:", error);
+//         res.status(500).json({ message: "Internal Server Error" });
+//     }
+// };
 
 
 
