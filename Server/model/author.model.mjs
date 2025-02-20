@@ -13,6 +13,12 @@ const AuthorSchema = new Schema(
         linkedin: { type: String, default: "" },
         instagram: { type: String, default: "" },
         youtube: { type: String, default: "" },
+        role: {
+            type: String,
+            enum: ['admin', 'author', 'superadmin'], 
+            default: 'author',
+            required: false,
+          }
     },
     { timestamps: true }
 );

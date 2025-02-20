@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "react-quill/dist/quill.snow.css";
 import { api } from "../../axios";
 import ReactQuill from "react-quill";
 import toast from "react-hot-toast";
 import { Link, useNavigate } from "react-router-dom";
+import { useUser } from "../userProvider";
 
 const CreateBlog = () => {
   const [title, setTitle] = useState("");
@@ -13,17 +14,20 @@ const CreateBlog = () => {
   const [description, setDescription] = useState("");
   const [image, setImage] = useState(null);
   const [isPublished, setIsPublished] = useState(false);
+  const { user } = useUser();
   const navigate = useNavigate();
   const userProfileImage = localStorage.getItem("profileImage");
 
+  useEffect(() => {
+    if (user?.username) {
+      setAuthor(user.username); // Set default author from logged-in user
+    }
+  }, [user]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setImage(file); 
-    }
+    if (file) setImage(file);
   };
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -39,39 +43,22 @@ const CreateBlog = () => {
     formData.append("author", author);
     formData.append("category", category);
     formData.append("description", description);
-    if (image) formData.append("image", image); 
-    formData.append("published", isPublished);
+    if (image) formData.append("image", image);
+    formData.append("published", isPublished); // ✅ Publish status included in creation
 
     try {
-      const response = await api.post("/get/create", formData, {
+      await api.post("/get/create", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
       toast.success("Blog created successfully!");
       navigate("/myblogs");
-
-      if (isPublished) {
-        await togglePublish(response.data._id); 
-      }
     } catch (error) {
       console.error("Error creating blog:", error);
       toast.error("Error creating blog");
     }
   };
 
-  
-  const togglePublish = async (blogId) => {
-    try {
-      const response = await api.put(`/author/publish/${blogId}`);
-      setIsPublished(response.data.published);
-      toast.success(response.data.published ? "Blog published!" : "Blog unpublished!");
-    } catch (error) {
-      console.error("Error updating publish status:", error);
-      toast.error("Error updating publish status");
-    }
-  };
-
-  
   const logout = () => {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");

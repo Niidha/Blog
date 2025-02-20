@@ -10,22 +10,31 @@ import ProfilePage from "../pages/author/Profile"
 import UpdateBlog from "../pages/author/editBlog"
 
 import AuthorDetails from "../pages/user/authorprofile"
+import AdminBlogList from "../pages/admin/adminblogs"
+import AuthorList from "../pages/admin/adminauthorpage"
+import AdminNotifications from "../pages/admin/adminnotification"
+import AuthorBlogs from "../pages/admin/adminauthorblogs"
+
 
 
 const Router = () => {
     return <BrowserRouter>
         <Routes>
             
-                <Route path="/create" element={<ProtectedRoute><BlogForm/></ProtectedRoute>} />
-                <Route path="/myblogs" element={<ProtectedRoute><BlogsByAuthor/></ProtectedRoute>} />
-                <Route path="/profile" element={<ProtectedRoute><ProfilePage/></ProtectedRoute>} />
+                <Route path="/create" element={<ProtectedRoute allowedRoles={["author"]}><BlogForm/></ProtectedRoute>} />
+                <Route path="/myblogs" element={<ProtectedRoute allowedRoles={["author","admin"]}><BlogsByAuthor/></ProtectedRoute>} />
+                <Route path="/profile" element={<ProtectedRoute allowedRoles={["author"]}><ProfilePage/></ProtectedRoute>} />
                 <Route path="/" element={<BlogList/>} />
-                <Route path="/editblog/:id" element={<ProtectedRoute><UpdateBlog/></ProtectedRoute>} />
+                <Route path="/editblog/:id" element={<ProtectedRoute allowedRoles={["author"]}><UpdateBlog/></ProtectedRoute>} />
                 <Route path="/viewblog/:id" element={<ViewBlog/>} />
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/signup" element={ <Signup/>} />
                 <Route path="/details/:username" element={ <AuthorDetails/>} />
-              
+                
+                <Route path="/adminblog" element={<ProtectedRoute allowedRoles={["admin"]}> <AdminBlogList/></ProtectedRoute>} />
+                <Route path="/adminnotification" element={<ProtectedRoute allowedRoles={["admin"]}> <AdminNotifications/></ProtectedRoute>} />
+                <Route path="/adminauthors" element={ <ProtectedRoute allowedRoles={["admin"]}><AuthorList/></ProtectedRoute>} />
+                <Route path="/author/:username" element={<ProtectedRoute allowedRoles={["admin"]}> <AuthorBlogs/></ProtectedRoute>} />
         </Routes>
     </BrowserRouter>
 }

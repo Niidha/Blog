@@ -1,3 +1,4 @@
+import { Notification} from '../model/notification.model.mjs';
 import { blogCollection } from '../model/post.model.mjs';
 
 export const getBlogDetails = async (req, res) => {
@@ -77,5 +78,36 @@ export const PublishBlog=async (req, res) => {
         res.status(500).json({ message: "Error updating publish status", error });
     }
 }
+export const UnpublishBlog = async (req, res) => {
+  try {
+    const { reason } = req.body;
+    const blog = await blogCollection.findById(req.params.id);
+
+    if (!blog) return res.status(404).json({ error: "Blog not found" });
+
+    // Update status to 'Marked for Review' and set published to false
+    blog.status = "Marked for Review";
+    blog.published = false;
+    await blog.save();
+
+    // Store notification in the database
+    const notification = new Notification({
+      username: blog.author, // Assuming 'author' is the username
+      message: `Your blog "${blog.title}" was marked for review. Reason: ${reason}`,
+    });
+    await notification.save();
+
+    // Send notification via Socket.IO
+    req.io.emit(`notify-${blog.author}`, {
+      message: `Your blog "${blog.title}" was marked for review. Reason: ${reason}`,
+    });
+
+    res.json({ success: true, message: "Blog marked for review", blog });
+  } catch (err) {
+    console.error("Error unpublishing blog:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
 
 

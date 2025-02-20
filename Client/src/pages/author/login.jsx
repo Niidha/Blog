@@ -22,12 +22,18 @@ const Login = () => {
 
                 console.log("Token received:", token);
 
-                // Store in Redux instead of localStorage directly
+                // Store in Redux
                 dispatch(createUser(user)); 
                 dispatch(setToken(token));
 
                 toast.success("Logged In Successfully!");
-                navigate('/create');
+
+                // Navigate based on role
+                if (user.role === 'admin') {
+                    navigate('/adminblog');
+                } else {
+                    navigate('/create');
+                }
 
             } catch (err) {
                 console.error("Login Error:", err.response?.data?.message || err.message);

@@ -19,6 +19,7 @@ function AuthorDetails() {
                 }
                 setLoading(false);
             })
+          
             .catch((error) => {
                 setError("Error fetching author details");
                 setLoading(false);
@@ -66,6 +67,7 @@ function AuthorDetails() {
                         </a>
                     )}
                 </div>
+               
             </div>
 
             {/* Back Button */}

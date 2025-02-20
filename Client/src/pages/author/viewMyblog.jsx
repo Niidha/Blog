@@ -15,7 +15,6 @@ function BlogsByAuthor() {
     const [error, setError] = useState(null);
     const [confirmDelete, setConfirmDelete] = useState(null);
 
-    // Redirect if not authenticated
     useEffect(() => {
         if (!token) {
             toast.error("You must be logged in to view this page.");
@@ -124,14 +123,28 @@ function BlogsByAuthor() {
                                     </button>
                                 </div>
 
-                                <button 
-                                    onClick={() => handlePublishToggle(blog._id)}
-                                    className={`block mt-3 w-full px-4 py-2 text-white rounded-lg ${
-                                        blog.published ? "bg-gray-500 hover:bg-gray-600" : "bg-green-500 hover:bg-green-600"
-                                    } transition duration-300`}
-                                >
-                                    {blog.published ? "Published" : "Publish"}
-                                </button>
+                                <label className="flex items-center cursor-pointer mt-3">
+                                    <input
+                                        type="checkbox"
+                                        className="sr-only"
+                                        checked={blog.published}
+                                        onChange={() => handlePublishToggle(blog._id)}
+                                    />
+                                    <div
+                                        className={`relative w-12 h-6 rounded-full transition-all duration-300 ease-in-out ${
+                                            blog.published ? "bg-green-500" : "bg-gray-300"
+                                        }`}
+                                    >
+                                        <div
+                                            className={`absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow-md transform transition-all duration-300 ease-in-out ${
+                                                blog.published ? "translate-x-6" : ""
+                                            }`}
+                                        ></div>
+                                    </div>
+                                    <span className="ml-3 text-sm font-medium">
+                                        {blog.published ? "Published" : "Unpublished"}
+                                    </span>
+                                </label>
                             </div>
                         </div>
                     ))}

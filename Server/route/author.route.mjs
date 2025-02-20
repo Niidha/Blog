@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { deleteblog, getAllAuthors, getAuthorByUsername,  getBlogByAuthor,  login, signUp, updateAuthorByUsername } from "../controller/author.controller.mjs";
-import { getBlogsCountByUsername, PublishBlog,  updateBlog } from "../controller/post.controller.mjs";
+import { getBlogsCountByUsername, PublishBlog,  UnpublishBlog,  updateBlog } from "../controller/post.controller.mjs";
 import { Auth } from "../middleware/auth.mjs";
 import { upload } from "../middleware/upload.mjs";
 
@@ -19,8 +19,10 @@ authorRoute.get("/", getAllAuthors);
 authorRoute.put("/editblog/:id", Auth, upload.single("image"), updateBlog);
 authorRoute.delete("/delete/:id", Auth, deleteblog);
 authorRoute.put("/publish/:id", Auth,PublishBlog);
+authorRoute.put("/unpublish/:id", UnpublishBlog);
 authorRoute.get("/blogcount/:username", getBlogsCountByUsername);
-authorRoute.get("/:username",Auth, getBlogByAuthor);
+authorRoute.get("/:username", getBlogByAuthor);
+
 
 
 
