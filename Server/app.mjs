@@ -14,7 +14,7 @@ import path from "path";
 
 env.config();
 
-// ✅ Connect to Database (Wrap in async function)
+// ✅ Connect to Database
 const connectDB = async () => {
     try {
         await dbConnect();
@@ -24,7 +24,6 @@ const connectDB = async () => {
         process.exit(1);
     }
 };
-
 connectDB();
 
 // ✅ Express App Setup
@@ -32,29 +31,32 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5174"], // Ensure this matches frontend origin
-        methods: ["GET", "POST"],
+        origin: ["http://localhost:5173"], // ✅ Ensure this matches frontend origin
+        methods: ["GET", "POST", "PUT"],
         credentials: true
     }
 });
+
+// ✅ Attach io to app globally
+app.set("io", io);
 
 // ✅ Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ CORS Configuration (Apply before routes)
-app.use(cors());
+// ✅ Properly configure CORS for Express
+app.use(
+    cors({
+        origin: ["http://localhost:5173"], // ✅ Ensure this matches frontend
+        methods: ["GET", "POST", "PUT"],
+        credentials: true
+    })
+);
 
 // ✅ Serve static files from "uploads" directory
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-// ✅ Attach `io` to Routes for WebSocket Communication
-app.use((req, res, next) => {
-    req.io = io;
-    next();
-});
 
 // ✅ API Routes
 app.use("/blog/author", authorRoute);

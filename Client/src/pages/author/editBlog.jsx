@@ -4,6 +4,7 @@ import { api } from "../../axios";
 import toast from "react-hot-toast";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import AuthorLayout from "./authorlayout";
 
 const EditBlog = () => {
   const { id } = useParams();
@@ -16,6 +17,8 @@ const EditBlog = () => {
     author: "",
     category: "",
     imageUrl: "",
+    adminUnpublished: false, // To check if admin unpublished it
+    reviewStatus: "", // Ensure review status is tracked
   });
 
   useEffect(() => {
@@ -31,7 +34,9 @@ const EditBlog = () => {
             content: fetchedBlog.content || "",
             author: fetchedBlog.author || "",
             category: fetchedBlog.category || "",
-            imageUrl: `http://localhost:9090/${fetchedBlog.imageUrl} `|| "",
+            imageUrl: `http://localhost:9090/${fetchedBlog.imageUrl}` || "",
+            adminUnpublished: fetchedBlog.adminUnpublished || false,
+            reviewStatus: fetchedBlog.reviewStatus || "", // Capture review status
           });
         }
       } catch (error) {
@@ -41,6 +46,11 @@ const EditBlog = () => {
 
     fetchBlog();
   }, [id]);
+
+  useEffect(() => {
+    console.log("Admin Unpublished:", blog.adminUnpublished);
+    console.log("Review Status:", blog.reviewStatus);
+  }, [blog]);
 
   const handleChange = (e) => {
     setBlog((prevBlog) => ({
@@ -75,110 +85,121 @@ const EditBlog = () => {
     }
   };
 
+  // ✅ Function to send blog for review
+  const sendForReview = async () => {
+    try {
+      const response = await api.put(`/author/submit-for-review/${id}`);
+
+      if (response.data.message) {
+        toast.success("Blog sent for review successfully!");
+        setBlog((prevBlog) => ({ ...prevBlog, adminUnpublished: false })); // Update UI
+      } else {
+        toast.error("Failed to submit for review.");
+      }
+    } catch (error) {
+      toast.error("Server error while submitting for review.");
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
-      <h1 className="text-3xl font-bold text-center mb-6">Edit Blog</h1>
-      <form onSubmit={handleSubmit}>
-        
-       
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Title:</label>
-          <input
-            type="text"
-            name="title"
-            value={blog.title}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-   
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Description:</label>
-          <input
-            type="text"
-            name="description"
-            value={blog.description}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-   
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Content:</label>
-          <ReactQuill 
-            value={blog.content} 
-            onChange={handleContentChange}
-            modules={{
-              toolbar: [
-                [{ 'font': [] }, { 'header': [] }],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }],
-                [{ 'align': [] }],
-                ['bold', 'italic', 'underline'],
-                ['image'],
-              ],
-            }}
-            className="bg-white border border-gray-300 rounded-md shadow-sm"
-          />
-        </div>
-
-      
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Author:</label>
-          <input
-            type="text"
-            name="author"
-            value={blog.author}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-   
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Category:</label>
-          <input
-            type="text"
-            name="category"
-            value={blog.category}
-            onChange={handleChange}
-            required
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        
-        <div className="mb-4">
-          <label className="block text-lg font-medium mb-2">Image:</label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="w-full p-2 border border-gray-300 rounded-md shadow-sm"
-          />
-          {blog.imageUrl && (
-            <img
-              src={blog.imageUrl}
-              alt="Blog Preview"
-              className="w-full mt-3 h-48 object-cover rounded-md"
+    <AuthorLayout>
+      <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md">
+        <h1 className="text-3xl font-bold text-center mb-6">Edit Blog</h1>
+        <form onSubmit={handleSubmit}>
+          
+          <div className="mb-4">
+            <label className="block text-lg font-medium mb-2">Title:</label>
+            <input
+              type="text"
+              name="title"
+              value={blog.title}
+              onChange={handleChange}
+              required
+              className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
             />
-          )}
-        </div>
+          </div>
 
-        <div className="flex justify-center">
-          <button
-            type="submit"
-            className="mt-5 bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
-          >
-            Update Blog
-          </button>
-        </div>
-      </form>
-    </div>
+          <div className="mb-4">
+            <label className="block text-lg font-medium mb-2">Description:</label>
+            <input
+              type="text"
+              name="description"
+              value={blog.description}
+              onChange={handleChange}
+              required
+              className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-medium mb-2">Content:</label>
+            <ReactQuill 
+              value={blog.content} 
+              onChange={handleContentChange}
+              modules={{
+                toolbar: [
+                  [{ 'font': [] }, { 'header': [] }],
+                  [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                  [{ 'align': [] }],
+                  ['bold', 'italic', 'underline'],
+                  ['image'],
+                ],
+              }}
+              className="bg-white border border-gray-300 rounded-md shadow-sm"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-medium mb-2">Category:</label>
+            <input
+              type="text"
+              name="category"
+              value={blog.category}
+              onChange={handleChange}
+              required
+              className="w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div className="mb-4">
+            <label className="block text-lg font-medium mb-2">Image:</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="w-full p-2 border border-gray-300 rounded-md shadow-sm"
+            />
+            {blog.imageUrl && (
+              <img
+                src={blog.imageUrl}
+                alt="Blog Preview"
+                className="w-full mt-3 h-48 object-cover rounded-md"
+              />
+            )}
+          </div>
+
+          <div className="flex justify-between items-center">
+            <button
+              type="submit"
+              className="mt-5 bg-blue-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
+            >
+              Update Blog
+            </button>
+
+            {/* ✅ Show "Send for Review" Button if admin unpublished the blog and status is "pending" or "rejected" */}
+            {blog.adminUnpublished && (blog.reviewStatus === "pending" || blog.reviewStatus === "rejected") && (
+              <button
+                onClick={sendForReview}
+                type="button"
+                className="mt-5 bg-green-600 text-white py-2 px-6 rounded-lg shadow-md hover:bg-green-700 focus:ring-2 focus:ring-green-500"
+              >
+                Send for Review
+              </button>
+            )}
+          </div>
+        </form>
+      </div>
+    </AuthorLayout>
   );
 };
 

@@ -28,7 +28,7 @@ const Signup = () => {
                 localStorage.setItem('access_token', data.token);
                 dispatch(createUser(data.user));
                 toast.success('Account Created');
-                navigate('/create');
+                navigate('/myblogs');
             } catch (err) {
                 toast.error(err.response?.data.message || err.message);
                 console.log(err.message);

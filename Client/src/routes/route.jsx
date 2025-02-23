@@ -14,6 +14,8 @@ import AdminBlogList from "../pages/admin/adminblogs"
 import AuthorList from "../pages/admin/adminauthorpage"
 import AdminNotifications from "../pages/admin/adminnotification"
 import AuthorBlogs from "../pages/admin/adminauthorblogs"
+import AuthorNotifications from "../pages/author/authornotification"
+import AdminReview from "../pages/admin/adminreview"
 
 
 
@@ -24,6 +26,7 @@ const Router = () => {
                 <Route path="/create" element={<ProtectedRoute allowedRoles={["author"]}><BlogForm/></ProtectedRoute>} />
                 <Route path="/myblogs" element={<ProtectedRoute allowedRoles={["author","admin"]}><BlogsByAuthor/></ProtectedRoute>} />
                 <Route path="/profile" element={<ProtectedRoute allowedRoles={["author"]}><ProfilePage/></ProtectedRoute>} />
+                <Route path="/authornotification" element={<ProtectedRoute allowedRoles={["author"]}><AuthorNotifications/></ProtectedRoute>} />
                 <Route path="/" element={<BlogList/>} />
                 <Route path="/editblog/:id" element={<ProtectedRoute allowedRoles={["author"]}><UpdateBlog/></ProtectedRoute>} />
                 <Route path="/viewblog/:id" element={<ViewBlog/>} />
@@ -35,6 +38,7 @@ const Router = () => {
                 <Route path="/adminnotification" element={<ProtectedRoute allowedRoles={["admin"]}> <AdminNotifications/></ProtectedRoute>} />
                 <Route path="/adminauthors" element={ <ProtectedRoute allowedRoles={["admin"]}><AuthorList/></ProtectedRoute>} />
                 <Route path="/author/:username" element={<ProtectedRoute allowedRoles={["admin"]}> <AuthorBlogs/></ProtectedRoute>} />
+                <Route path="/adminreview" element={<ProtectedRoute allowedRoles={["admin"]}> <AdminReview/></ProtectedRoute>} />
         </Routes>
     </BrowserRouter>
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 import { api } from "../../axios";
 
 const socket = io("http://localhost:9090"); // WebSocket connection
@@ -9,6 +10,7 @@ function AdminNotifications() {
     const [recipient, setRecipient] = useState(""); // Single recipient (now correctly named)
     const [message, setMessage] = useState("");
     const [status, setStatus] = useState(null);
+    const navigate = useNavigate(); // Hook for navigation
 
     useEffect(() => {
         fetchNotifications();
@@ -61,6 +63,14 @@ function AdminNotifications() {
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
             <h2 className="text-2xl font-bold text-gray-800 mb-4">Admin Notifications</h2>
+
+            {/* Navigate to Admin Review Button */}
+            <button
+                onClick={() => navigate("/adminreview")}
+                className="mb-4 bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            >
+                Go to Admin Review
+            </button>
 
             {/* Send Notification Section */}
             <div className="mb-6 p-4 border rounded-lg bg-gray-100">

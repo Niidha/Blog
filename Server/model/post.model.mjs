@@ -35,7 +35,13 @@ const blogSchema = new Schema({
     published: { 
         type: Boolean, 
         default: false  
-    }
+    },
+    reviewStatus: { 
+        type: String, 
+        enum: ["pending", "approved", "rejected"], 
+        default: "approved" 
+      },
+      adminUnpublished: { type: Boolean, default: false }
   });
   
   export const blogCollection = model("blogposts", blogSchema);

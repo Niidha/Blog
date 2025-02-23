@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { api } from "../../axios";
 import { useSelector } from "react-redux";
 import { FaTrash, FaGithub, FaLinkedin, FaYoutube, FaInstagram } from "react-icons/fa";
+import AuthorLayout from "./authorlayout";
 
 const ProfilePage = () => {
   const user = useSelector((state) => state.author.user);
@@ -90,6 +91,7 @@ const ProfilePage = () => {
   };
 
   return (
+    <AuthorLayout>
     <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-lg mt-10">
       {editMode ? (
         <form onSubmit={handleSubmit}>
@@ -198,6 +200,7 @@ const ProfilePage = () => {
         </div>
       )}
     </div>
+    </AuthorLayout>
   );
 };
 

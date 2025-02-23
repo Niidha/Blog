@@ -32,7 +32,7 @@ const Login = () => {
                 if (user.role === 'admin') {
                     navigate('/adminblog');
                 } else {
-                    navigate('/create');
+                    navigate('/myblogs');
                 }
 
             } catch (err) {
