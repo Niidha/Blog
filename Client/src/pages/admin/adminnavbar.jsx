@@ -15,7 +15,7 @@ function AdminNavbar({ toggleSidebar }) {
     };
 
     return (
-        <nav className="bg-gray-800 text-white p-4 flex justify-between items-center relative">
+        <nav className="bg-gray-800 text-white p-4 flex justify-between items-center fixed top-0 left-0 w-full h-16 z-50 shadow-md">
             <div className="flex items-center">
                 <button className="text-white focus:outline-none mr-4" onClick={toggleSidebar}>
                     &#9776;
@@ -43,7 +43,7 @@ function AdminNavbar({ toggleSidebar }) {
 
 function AdminSidebar({ isOpen, closeSidebar }) {
     return (
-        <div className={`fixed top-0 left-0 h-full w-50 bg-gray-900 bg-opacity-90 text-white p-4 transition-transform transform ${isOpen ? "translate-x-0" : "-translate-x-full"}`}>
+        <div className={`fixed top-0 left-0 h-full w-52 bg-gray-900 bg-opacity-90 text-white p-4 transition-transform transform ${isOpen ? "translate-x-0" : "-translate-x-full"} z-40`}>
             <button className="text-white focus:outline-none mb-4" onClick={closeSidebar}>
                 ✖
             </button>
@@ -54,8 +54,8 @@ function AdminSidebar({ isOpen, closeSidebar }) {
                 <li><Link to="/admingallery" className="block py-2 px-4 hover:bg-gray-700 rounded">Gallery</Link></li>
                 <li><Link to="/adminportfolio" className="block py-2 px-4 hover:bg-gray-700 rounded">Portfolio</Link></li>
                 <li><Link to="/admintestimonials" className="block py-2 px-4 hover:bg-gray-700 rounded">Testimonials</Link></li>
-                <li><Link to="/adminmanage-admin" className="block py-2 px-4 hover:bg-gray-700 rounded">Manage Admin</Link></li>
-                <li><Link to="/adminmanage-author" className="block py-2 px-4 hover:bg-gray-700 rounded">Manage Author</Link></li>
+                <li><Link to="/adminmanage" className="block py-2 px-4 hover:bg-gray-700 rounded">Manage Users</Link></li>
+             
             </ul>
         </div>
     );
@@ -75,9 +75,9 @@ function AdminLayout({ children }) {
     return (
         <div className="relative">
             <AdminSidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
-            <div className="flex-1">
+            <div className={`flex-1 min-h-screen transition-all ${isSidebarOpen ? "ml-52" : "ml-0"}`}>
                 <AdminNavbar toggleSidebar={toggleSidebar} />
-                <main className="p-6">{children}</main>
+                <main className="p-6 pt-16">{children}</main>
             </div>
         </div>
     );

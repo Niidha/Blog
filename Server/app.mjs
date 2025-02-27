@@ -11,6 +11,7 @@ import adminRoute from "./route/admin.route.mjs";
 import notifyRoute from "./route/notification.route.mjs";
 import { fileURLToPath } from "url";
 import path from "path";
+import reviewRoute from "./route/review.route.mjs";
 
 env.config();
 
@@ -48,7 +49,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
         origin: ["http://localhost:5173"], // ✅ Ensure this matches frontend
-        methods: ["GET", "POST", "PUT"],
+        methods: ["GET", "POST", "PUT","DELETE"],
         credentials: true
     })
 );
@@ -64,6 +65,7 @@ app.use("/blog", userRoute);
 app.use("/blog/get", blogrouter);
 app.use("/blog/admin", adminRoute);
 app.use("/blog/notify", notifyRoute);
+app.use("/blog/review", reviewRoute);
 
 // ✅ WebSocket Setup
 io.on("connection", (socket) => {

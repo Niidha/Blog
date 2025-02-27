@@ -4,12 +4,14 @@ import { io } from "socket.io-client";
 import { useSelector } from "react-redux";
 import AuthorLayout from "./authorlayout";
 import { api } from "../../axios";
+import { useNavigate } from "react-router-dom";
 
 const socket = io("http://localhost:9090");
 
 function AuthorNotifications() {
     const user = useSelector((state) => state.author.user);
     const username = user?.username; // ✅ Ensure correct username is used
+    const navigate = useNavigate();
 
     const [unreadNotifications, setUnreadNotifications] = useState([]);
     const [readNotifications, setReadNotifications] = useState([]);
@@ -93,6 +95,12 @@ function AuthorNotifications() {
                 <h2 className="text-2xl font-bold text-gray-800 mb-4">
                     Your Notifications {unreadCount > 0 && <span className="text-red-500">({unreadCount} new)</span>}
                 </h2>
+                <button
+                        onClick={() => navigate("/authorinvitation")}
+                        className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg shadow hover:bg-blue-600 transition"
+                    >
+                       View Invitations
+                    </button>
 
                 {unreadNotifications.length === 0 && readNotifications.length === 0 ? (
                     <p className="text-gray-500">No notifications yet.</p>

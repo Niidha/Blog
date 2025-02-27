@@ -1,9 +1,12 @@
 import { Router } from "express";
-import { getAllAuthors } from "../controller/admin.controller.mjs";
+import { createUser, deleteUser, getAdminDashboardData, getAdminNotifications, getAllAuthors, inviteToAdmin} from "../controller/admin.controller.mjs";
 import { Notification } from "../model/notification.model.mjs";
+import { respondToInvitation } from "../controller/author.controller.mjs";
+import { getGeneralNotifications } from "../controller/notification.controller.mjs";
 
 const adminRoute=Router()
 adminRoute.get('/authors', getAllAuthors);
+adminRoute.get('/dashboard', getAdminDashboardData);
 adminRoute.put("/review-blog/:blogId", async (req, res) => {
     try {
         const { blogId } = req.params;
@@ -63,5 +66,12 @@ adminRoute.get("/reviewnotifications", async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 });
+adminRoute.get("/invitenotification", getAdminNotifications); 
+adminRoute.get("/generalnotification", getGeneralNotifications);
+adminRoute.post("/invite-admin", inviteToAdmin); // Invite an author to be admin
+adminRoute.post("/respond-invite", respondToInvitation);
+adminRoute.post("/create", createUser); // Create a new user
+
+adminRoute.delete("/delete/:userId", deleteUser); 
 
 export default adminRoute

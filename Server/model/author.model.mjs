@@ -18,8 +18,10 @@ const AuthorSchema = new Schema(
             enum: ['admin', 'author', 'superadmin'], 
             default: 'author',
             required: false,
-          }
+          },
+          isInvited: { type: Boolean, default: false },
     },
+    
     { timestamps: true }
 );
 

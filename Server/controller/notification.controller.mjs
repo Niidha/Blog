@@ -62,24 +62,28 @@ export const getNotificationsForAuthor = async (req, res) => {
 
 
 // ✅ Get All Notifications (Admin)
-export const getAllNotifications = async (req, res) => {
+export const getGeneralNotifications = async (req, res) => {
     try {
-        console.log("📌 Fetching all notifications...");
+        console.log("📌 Fetching only general notifications...");
 
-        const notifications = await Notification.find().sort({ createdAt: -1 });
+        const generalNotifications = await Notification.find({ type: "general" }).sort({ createdAt: -1 });
 
-        if (!notifications.length) {
-            console.log("⚠️ No notifications found.");
-            return res.status(200).json({ notifications: [] });
+        console.log("🔍 Query Result:", generalNotifications);
+
+        if (!generalNotifications || generalNotifications.length === 0) {
+            console.log("⚠️ No general notifications found.");
+            return res.status(200).json({ success: true, notifications: [] });
         }
 
-        console.log(`✅ Found ${notifications.length} total notifications.`);
-        res.status(200).json({ notifications });
+        console.log(`✅ Found ${generalNotifications.length} general notifications.`);
+        res.status(200).json({ success: true, notifications: generalNotifications });
     } catch (error) {
-        console.error("❌ Error fetching notifications:", error);
-        res.status(500).json({ error: "Internal server error" });
+        console.error("❌ Error fetching general notifications:", error);
+        res.status(500).json({ success: false, error: error.message || "Internal server error" });
     }
 };
+
+
 export const getRecipientNotifications = async (req, res) => {
     try {
         const { recipient } = req.params;

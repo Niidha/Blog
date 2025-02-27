@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { deleteblog, getAllAuthors, getAuthorByUsername,  getBlogByAuthor,  login, signUp, updateAuthorByUsername } from "../controller/author.controller.mjs";
+import { deleteblog, getAllAuthors, getAuthorByUsername,  getAuthorInvitations,  getBlogByAuthor,  login, respondToInvitation, signUp, updateAuthorByUsername } from "../controller/author.controller.mjs";
 import { getBlogsCountByUsername, PublishBlog,  UnpublishBlog,  updateBlog } from "../controller/post.controller.mjs";
 import { Auth } from "../middleware/auth.mjs";
 import { upload } from "../middleware/upload.mjs";
@@ -55,7 +55,8 @@ authorRoute.put("/submit-for-review/:blogId", async (req, res) => {
   }
 });
 
-  
+authorRoute.get("/invitation/:id", getAuthorInvitations);
+authorRoute.post("/invitation/response", respondToInvitation);
 authorRoute.put("/unpublish/:id", UnpublishBlog);
 authorRoute.get("/blogcount/:username", getBlogsCountByUsername);
 authorRoute.get("/:username", getBlogByAuthor);

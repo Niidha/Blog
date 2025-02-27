@@ -9,7 +9,7 @@ import AuthorLayout from "./authorlayout";
 const EditBlog = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [blog, setBlog] = useState({
     title: "",
     description: "",
@@ -17,8 +17,8 @@ const EditBlog = () => {
     author: "",
     category: "",
     imageUrl: "",
-    adminUnpublished: false, // To check if admin unpublished it
-    reviewStatus: "", // Ensure review status is tracked
+    adminUnpublished: false, // ✅ Track if admin unpublished
+    reviewStatus: "", // ✅ Track review status
   });
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const EditBlog = () => {
             category: fetchedBlog.category || "",
             imageUrl: `http://localhost:9090/${fetchedBlog.imageUrl}` || "",
             adminUnpublished: fetchedBlog.adminUnpublished || false,
-            reviewStatus: fetchedBlog.reviewStatus || "", // Capture review status
+            reviewStatus: fetchedBlog.reviewStatus || "",
           });
         }
       } catch (error) {
@@ -85,19 +85,23 @@ const EditBlog = () => {
     }
   };
 
-  // ✅ Function to send blog for review
+  // ✅ Always allow sending for review if adminUnpublished is true
   const sendForReview = async () => {
     try {
-      const response = await api.put(`/author/submit-for-review/${id}`);
+      const response = await api.post(`/review/submit-review/${id}`);
 
       if (response.data.message) {
         toast.success("Blog sent for review successfully!");
-        setBlog((prevBlog) => ({ ...prevBlog, adminUnpublished: false })); // Update UI
+        setBlog((prevBlog) => ({
+          ...prevBlog,
+          adminUnpublished: false, // ✅ Reset after submission
+          reviewStatus: "pending", // ✅ Update review status
+        }));
       } else {
         toast.error("Failed to submit for review.");
       }
     } catch (error) {
-      toast.error("Server error while submitting for review.");
+      toast.error(error.response?.data?.message || "Server error while submitting for review.");
     }
   };
 
@@ -186,8 +190,8 @@ const EditBlog = () => {
               Update Blog
             </button>
 
-            {/* ✅ Show "Send for Review" Button if admin unpublished the blog and status is "pending" or "rejected" */}
-            {blog.adminUnpublished && (blog.reviewStatus === "pending" || blog.reviewStatus === "rejected") && (
+            {/* ✅ Always allow sending for review when adminUnpublished is true */}
+            {blog.adminUnpublished && (
               <button
                 onClick={sendForReview}
                 type="button"
