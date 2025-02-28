@@ -53,7 +53,7 @@ function AdminSidebar({ isOpen, closeSidebar }) {
                 <li><Link to="/adminblog" className="block py-2 px-4 hover:bg-gray-700 rounded">Blogs</Link></li>
                 <li><Link to="/admingallery" className="block py-2 px-4 hover:bg-gray-700 rounded">Gallery</Link></li>
                 <li><Link to="/adminportfolio" className="block py-2 px-4 hover:bg-gray-700 rounded">Portfolio</Link></li>
-                <li><Link to="/admintestimonials" className="block py-2 px-4 hover:bg-gray-700 rounded">Testimonials</Link></li>
+                <li><Link to="/admintestimonial" className="block py-2 px-4 hover:bg-gray-700 rounded">Testimonials</Link></li>
                 <li><Link to="/adminmanage" className="block py-2 px-4 hover:bg-gray-700 rounded">Manage Users</Link></li>
              
             </ul>

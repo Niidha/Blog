@@ -20,6 +20,7 @@ import AdminDashboard from "../pages/admin/admindashboard"
 import AdminManage from "../pages/admin/adminmanageuseradmin"
 import AuthorInvitations from "../pages/author/authorinvitations"
 import AdminreviewNotifications from "../pages/admin/adminauthorinvite"
+import Testimonials from "../pages/admin/admintestimonial"
 
 
 
@@ -47,6 +48,7 @@ const Router = () => {
                 <Route path="/admindashboard" element={<ProtectedRoute allowedRoles={["admin"]}> <AdminDashboard/></ProtectedRoute>} />
                 <Route path="/adminmanage" element={<ProtectedRoute allowedRoles={["admin"]}> <AdminManage/></ProtectedRoute>} />
                 <Route path="/admininviteresponse" element={<ProtectedRoute allowedRoles={["admin"]}> <AdminreviewNotifications/></ProtectedRoute>} />
+                <Route path="/admintestimonial" element={<ProtectedRoute allowedRoles={["admin"]}> <Testimonials/></ProtectedRoute>} />
         </Routes>
     </BrowserRouter>
 }
