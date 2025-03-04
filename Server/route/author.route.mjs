@@ -12,7 +12,7 @@ const authorRoute = Router();
 authorRoute.post("/signup", signUp);
 authorRoute.post("/login", login);
 authorRoute.get("/details/:username", getAuthorByUsername);
-authorRoute.patch("/update/:username", Auth,upload.single("image"), updateAuthorByUsername);
+authorRoute.patch("/update/:username", upload.single("image"), updateAuthorByUsername);
 // authorRoute.get("/profileUrl/:userId", getauthorProfileUrl);
 authorRoute.get("/", getAllAuthors);
 

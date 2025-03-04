@@ -2,7 +2,7 @@ import express from "express";
 import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
-import { createTestimonial, deleteTestimonial, getTestimonials } from "../controller/testimonials.controller.mjs";
+import { createTestimonial, deleteTestimonial, getTestimonials, updateTestimonial} from "../controller/testimonials.controller.mjs";
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -25,6 +25,7 @@ const upload = multer({ storage });
 // Routes
 testimonialRoute.post("/add", upload.single("profileImage"), createTestimonial);
 testimonialRoute.get("/get", getTestimonials);
+testimonialRoute.put("/edit/:id", upload.single("profileImage"),updateTestimonial)
 testimonialRoute.delete("/:id", deleteTestimonial);
 
 export default testimonialRoute;

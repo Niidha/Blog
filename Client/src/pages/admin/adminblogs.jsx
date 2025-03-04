@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import AdminLayout from "./adminnavbar";
+import { api } from "../../axios";
 
 function AdminBlogList() {
     const [blogs, setBlogs] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:9090/blog/get/blogs")
+        api.get("/get/blogs")
             .then((res) => setBlogs(res.data))
             .catch((error) => console.error("Error fetching blogs:", error));
     }, []);

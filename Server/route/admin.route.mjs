@@ -12,7 +12,7 @@ adminRoute.put("/review-blog/:blogId", async (req, res) => {
         const { blogId } = req.params;
         const { decision } = req.body;
 
-        const blog = await Blog.findById(blogId);
+        const blog = await blogCollection.findById(blogId);
         if (!blog) return res.status(404).json({ message: "Blog not found" });
 
         if (decision === "approve") {

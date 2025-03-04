@@ -31,7 +31,7 @@ function AdminNavbar({ toggleSidebar }) {
                     {isProfileOpen && (
                         <div className="absolute right-0 mt-2 w-48 bg-gray-900 text-white shadow-md rounded-md py-2">
                             <p className="px-4 py-2 border-b">Admin</p>
-                            <Link to="/adminprofile" className="block px-4 py-2 hover:bg-gray-500">Profile</Link>
+                            <Link to="/profile" className="block px-4 py-2 hover:bg-gray-500">Profile</Link>
                             <button className="w-full text-left px-4 py-2 hover:bg-gray-500" onClick={handleLogout}>Logout</button>
                         </div>
                     )}
@@ -52,7 +52,7 @@ function AdminSidebar({ isOpen, closeSidebar }) {
                 <li><Link to="/adminauthors" className="block py-2 px-4 hover:bg-gray-700 rounded">Authors</Link></li>
                 <li><Link to="/adminblog" className="block py-2 px-4 hover:bg-gray-700 rounded">Blogs</Link></li>
                 <li><Link to="/admingallery" className="block py-2 px-4 hover:bg-gray-700 rounded">Gallery</Link></li>
-                <li><Link to="/adminportfolio" className="block py-2 px-4 hover:bg-gray-700 rounded">Portfolio</Link></li>
+                <li><Link to="/portfolio" className="block py-2 px-4 hover:bg-gray-700 rounded">Portfolio</Link></li>
                 <li><Link to="/admintestimonial" className="block py-2 px-4 hover:bg-gray-700 rounded">Testimonials</Link></li>
                 <li><Link to="/adminmanage" className="block py-2 px-4 hover:bg-gray-700 rounded">Manage Users</Link></li>
              

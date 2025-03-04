@@ -40,25 +40,7 @@ export const sendNotification = async (req, res) => {
 };
 
 
-// ✅ Get Notifications for a Specific Recipient
-export const getNotificationsForAuthor = async (req, res) => {
-    try {
-        const { recipient } = req.params;
 
-        const notifications = await Notification
-            .find({ recipients: recipient }) // Check if recipient exists in the array
-            .sort({ createdAt: -1 });
-
-        if (!notifications.length) {
-            return res.status(404).json({ error: "No notifications found for this recipient" });
-        }
-
-        res.status(200).json({ notifications });
-    } catch (error) {
-        console.error("❌ Error fetching recipient notifications:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-};
 
 
 // ✅ Get All Notifications (Admin)

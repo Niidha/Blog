@@ -13,6 +13,8 @@ import { fileURLToPath } from "url";
 import path from "path";
 import reviewRoute from "./route/review.route.mjs";
 import testimonialRoute from "./route/testimonial.route.mjs";
+import GalleryRoute from "./route/gallery.route.mjs";
+import PortfolioRoute from "./route/portfolio.route.mjs";
 
 env.config();
 
@@ -33,7 +35,7 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["http://localhost:5173"], // ✅ Ensure this matches frontend origin
+        // ✅ Ensure this matches frontend origin
         methods: ["GET", "POST", "PUT"],
         credentials: true
     }
@@ -50,7 +52,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(
     cors({
       // ✅ Ensure this matches frontend
-        methods: ["GET", "POST", "PUT","DELETE"],
+        methods: ["GET", "POST", "PUT","DELETE","PATCH"],
         credentials: true
     })
 );
@@ -68,7 +70,8 @@ app.use("/blog/admin", adminRoute);
 app.use("/blog/notify", notifyRoute);
 app.use("/blog/review", reviewRoute);
 app.use("/blog/testimonial", testimonialRoute);
-
+app.use("/blog/gallery", GalleryRoute);
+app.use("/blog/portfolio", PortfolioRoute);
 // ✅ WebSocket Setup
 io.on("connection", (socket) => {
     console.log(`🟢 New user connected: ${socket.id}`);

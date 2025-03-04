@@ -41,6 +41,42 @@ export const getTestimonials = async (req, res) => {
         res.status(500).json({ error: "Error fetching testimonials", details: error.message });
     }
 };
+//update testimonial
+export const updateTestimonial = async (req, res) => {
+    try {
+        console.log("Received Update Request for ID:", req.params.id);
+        console.log("Request Body:", req.body);
+        console.log("Uploaded File:", req.file);
+
+        const { title, description, designation } = req.body;
+        let profileImage = req.file ? `/uploads/${req.file.filename}` : null;
+
+        const testimonial = await Testimonials.findById(req.params.id);
+        if (!testimonial) {
+            return res.status(404).json({ message: "Testimonial not found" });
+        }
+
+        if (profileImage && testimonial.profileImage) {
+            const oldImagePath = path.join(__dirname, "..", "public", testimonial.profileImage);
+            fs.unlink(oldImagePath, (err) => {
+                if (err) console.error("Error deleting old image:", err);
+            });
+        }
+
+        testimonial.title = title;
+        testimonial.description = description;
+        testimonial.designation = designation;
+        if (profileImage) testimonial.profileImage = profileImage;
+
+        await testimonial.save();
+        res.status(200).json({ message: "Testimonial updated successfully", testimonial });
+
+    } catch (error) {
+        console.error("Error in updateTestimonial:", error); // Log error
+        res.status(500).json({ message: "Error updating testimonial", error: error.message });
+    }
+};
+
 
 // **Delete a Testimonial**
 export const deleteTestimonial = async (req, res) => {
