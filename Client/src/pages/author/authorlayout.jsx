@@ -56,7 +56,7 @@ const AuthorLayout = ({ children }) => {
 
   const handleLogout = () => {
     console.log("Logging out...");
-    navigate("/login");
+    navigate("/");
   };
 
   return (

@@ -3,11 +3,12 @@ import { createUser, deleteUser, getAdminDashboardData, getAdminNotifications, g
 import { Notification } from "../model/notification.model.mjs";
 import { respondToInvitation } from "../controller/author.controller.mjs";
 import { getGeneralNotifications } from "../controller/notification.controller.mjs";
+import { Auth, authorizeRoles } from "../middleware/auth.mjs";
 
 const adminRoute=Router()
-adminRoute.get('/authors', getAllAuthors);
-adminRoute.get('/dashboard', getAdminDashboardData);
-adminRoute.put("/review-blog/:blogId", async (req, res) => {
+adminRoute.get('/authors',Auth,authorizeRoles("admin"), getAllAuthors);
+adminRoute.get('/dashboard',Auth,authorizeRoles("admin"),  getAdminDashboardData);
+adminRoute.put("/review-blog/:blogId",Auth,authorizeRoles("admin"),  async (req, res) => {
     try {
         const { blogId } = req.params;
         const { decision } = req.body;
@@ -55,7 +56,7 @@ adminRoute.put("/review-blog/:blogId", async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 });
-adminRoute.get("/reviewnotifications", async (req, res) => {
+adminRoute.get("/reviewnotifications",Auth,authorizeRoles("admin"),  async (req, res) => {
     try {
         const notifications = await Notification.find({ recipient: "admin"})
             .sort({ createdAt: -1 });
@@ -66,12 +67,12 @@ adminRoute.get("/reviewnotifications", async (req, res) => {
         res.status(500).json({ message: "Server Error" });
     }
 });
-adminRoute.get("/invitenotification", getAdminNotifications); 
-adminRoute.get("/generalnotification", getGeneralNotifications);
-adminRoute.post("/invite-admin", inviteToAdmin); // Invite an author to be admin
-adminRoute.post("/respond-invite", respondToInvitation);
-adminRoute.post("/create", createUser); // Create a new user
+adminRoute.get("/invitenotification",Auth,authorizeRoles("admin"),  getAdminNotifications); 
+adminRoute.get("/generalnotification",Auth,authorizeRoles("admin"),  getGeneralNotifications);
+adminRoute.post("/invite-admin",Auth,authorizeRoles("admin"),  inviteToAdmin); // Invite an author to be admin
+adminRoute.post("/respond-invite",Auth,authorizeRoles("admin"),  respondToInvitation);
+adminRoute.post("/create",Auth,authorizeRoles("admin"),  createUser); // Create a new user
 
-adminRoute.delete("/delete/:userId", deleteUser); 
+adminRoute.delete("/delete/:userId",Auth,authorizeRoles("admin"),  deleteUser); 
 
 export default adminRoute

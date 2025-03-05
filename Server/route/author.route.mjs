@@ -12,16 +12,16 @@ const authorRoute = Router();
 authorRoute.post("/signup", signUp);
 authorRoute.post("/login", login);
 authorRoute.get("/details/:username", getAuthorByUsername);
-authorRoute.patch("/update/:username", upload.single("image"), updateAuthorByUsername);
+authorRoute.patch("/update/:username", Auth,upload.single("image"), updateAuthorByUsername);
 // authorRoute.get("/profileUrl/:userId", getauthorProfileUrl);
-authorRoute.get("/", getAllAuthors);
+authorRoute.get("/",Auth, getAllAuthors);
 
 //  Blog Management
 
 authorRoute.put("/editblog/:id", Auth, upload.single("image"), updateBlog);
 authorRoute.delete("/delete/:id", Auth, deleteblog);
 authorRoute.put("/publish/:id", Auth,PublishBlog);
-authorRoute.put("/submit-for-review/:blogId", async (req, res) => {
+authorRoute.put("/submit-for-review/:blogId",Auth, async (req, res) => {
   try {
       const { blogId } = req.params;
       const blog = await blogCollection.findById(blogId).populate("author", "name");
@@ -55,11 +55,11 @@ authorRoute.put("/submit-for-review/:blogId", async (req, res) => {
   }
 });
 
-authorRoute.get("/invitation/:id", getAuthorInvitations);
-authorRoute.post("/invitation/response", respondToInvitation);
-authorRoute.put("/unpublish/:id", UnpublishBlog);
-authorRoute.get("/blogcount/:username", getBlogsCountByUsername);
-authorRoute.get("/:username", getBlogByAuthor);
+authorRoute.get("/invitation/:id",Auth, getAuthorInvitations);
+authorRoute.post("/invitation/response",Auth, respondToInvitation);
+authorRoute.put("/unpublish/:id",Auth, UnpublishBlog);
+authorRoute.get("/blogcount/:username",Auth, getBlogsCountByUsername);
+authorRoute.get("/:username",Auth, getBlogByAuthor);
 
 
 

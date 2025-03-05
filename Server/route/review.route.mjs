@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Auth, authorizeAdmin } from "../middleware/auth.mjs";
+import { Auth} from "../middleware/auth.mjs";
 import { GetAllReviews, ReviewBlog, SubmitReview } from "../controller/review.controller.mjs";
 
 const reviewRoute=Router()
