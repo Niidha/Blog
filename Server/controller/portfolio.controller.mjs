@@ -5,23 +5,22 @@ export const createPortfolio = async (req, res) => {
     try {
         console.log("📌 Request Body:", req.body);
 
-        const { category, title, services, industry, videoUrls, imageUrls, portfolioImage } = req.body;
-        if (!category || !title) {
-            return res.status(400).json({ message: "Category and title are required." });
+        const { category, title, services, industry, content, videoUrls, imageUrls, portfolioImage } = req.body;
+        if (!category || !title || !content) {
+            return res.status(400).json({ message: "Category, title, and content are required." });
         }
 
-        // Parse services properly as an array of objects
         const parsedServices = Array.isArray(services) ? services.map(service => ({
             head: service.head ? service.head.trim() : "",
             description: service.description ? service.description.trim() : "",
         })) : [];
 
-        // Save to database
         const portfolioItem = new Portfolio({
             category,
             title,
-            image: portfolioImage, 
+            image: portfolioImage,
             services: parsedServices,
+            content,  // Quill content saved as-is (HTML format)
             industry,
             videoUrls: Array.isArray(videoUrls) ? videoUrls.map(url => url.trim()) : [],
             imageUrls: Array.isArray(imageUrls) ? imageUrls.map(url => url.trim()) : [],

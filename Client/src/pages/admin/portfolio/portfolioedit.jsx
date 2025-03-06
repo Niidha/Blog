@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-hot-toast";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const EditPortfolio = () => {
   const { id } = useParams();
@@ -14,6 +16,7 @@ const EditPortfolio = () => {
     videoUrls: [""],
     imageUrls: [""],
     portfolioImage: "",
+    content: "",
   });
 
   useEffect(() => {
@@ -29,6 +32,7 @@ const EditPortfolio = () => {
           videoUrls: data.videoUrls || [""],
           imageUrls: data.imageUrls || [""],
           portfolioImage: data.image || "",
+          content: data.content || "",
         });
       })
       .catch(() => toast.error("Error fetching portfolio"));
@@ -36,6 +40,9 @@ const EditPortfolio = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleContentChange = (value) => {
+    setFormData({ ...formData, content: value });
   };
 
   const handleArrayChange = (e, index, type, field = null) => {
@@ -108,6 +115,9 @@ const EditPortfolio = () => {
           ))}
           <button type="button" onClick={() => addArrayItem("services")} className="text-blue-500">+ Add Service</button>
         </div>
+        <label className="block font-medium">Content</label>
+        <ReactQuill theme="snow" value={formData.content} onChange={handleContentChange} className="bg-white" />
+
 
         <div>
           <label className="block font-medium">Video URLs</label>

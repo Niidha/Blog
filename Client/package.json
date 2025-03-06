@@ -10,8 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dnd-kit/accessibility": "^3.1.1",
+    "@dnd-kit/core": "^6.3.1",
+    "@dnd-kit/sortable": "^10.0.0",
     "@reduxjs/toolkit": "^2.5.1",
     "@tailwindcss/vite": "^4.0.4",
+    "array-move": "^4.0.0",
     "bootstrap": "^5.3.3",
     "formik": "^2.4.6",
     "html-react-parser": "^5.2.2",
@@ -25,6 +29,7 @@
     "react-quill": "^2.0.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.5",
+    "react-sortablejs": "^6.1.4",
     "react-toastify": "^11.0.3",
     "redux": "^5.0.1",
     "redux-persist": "^6.0.0",

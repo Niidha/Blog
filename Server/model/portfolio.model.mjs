@@ -9,6 +9,7 @@ const PortfolioSchema = new Schema({
         description: { type: String, required: false }
     }], 
     industry: { type: String, required: false }, 
+    content: { type: String, required: false },  // Add content field for Quill
     videoUrls: [{ type: String, required: false }], 
     imageUrls: [{ type: String, required: false }], 
     createdAt: { type: Date, default: Date.now }, 

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../axios";
 import AdminLayout from "../adminnavbar";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const PortfolioPost = () => {
   const navigate = useNavigate();
@@ -16,6 +18,11 @@ const PortfolioPost = () => {
     imageUrls: [],
   });
 
+  const [content, setContent] = useState("");
+
+const handleContentChange = (value) => {
+  setContent(value);
+}
   const handleChange = (e) => {
     setPortfolio({ ...portfolio, [e.target.name]: e.target.value });
   };
@@ -70,13 +77,18 @@ const PortfolioPost = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    console.log("🚀 Submitting Data:", portfolio);
 
-    api.post("/portfolio/add", portfolio)
+    const dataToSend = {
+        ...portfolio,
+        content: content, // Include content from Quill editor
+    };
+
+    console.log("🚀 Submitting Data:", dataToSend);
+
+    api.post("/portfolio/add", dataToSend)
       .then(() => navigate("/portfolio"))
       .catch((err) => console.error("❌ Save error:", err));
-  };
+};
 
   return (
     <AdminLayout>
@@ -139,7 +151,13 @@ const PortfolioPost = () => {
         <button type="button" onClick={handleAddService} className="bg-blue-500 text-white px-4 py-2 rounded">
           Add Service
         </button>
-
+        <label className="block font-semibold mt-4">Content</label>
+<ReactQuill
+  theme="snow"
+  value={content}
+  onChange={handleContentChange}
+  className="bg-white"
+/>
         {/* Video URLs */}
         <label className="block font-semibold mt-4">Video URLs</label>
         {portfolio.videoUrls.map((url, index) => (
