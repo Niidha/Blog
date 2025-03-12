@@ -29,11 +29,7 @@ const upload = multer({ storage });
 
 export const getGallery = async (req, res) => {
     try {
-        const images = await Gallery.find().sort({ createdAt: -1 });
-
-        if (!images.length) {
-            return res.status(404).json({ message: "No images found" });
-        }
+        const images = await Gallery.find().sort({ order: 1 }); // Sort by order field
 
         res.status(200).json(images);
     } catch (error) {
@@ -41,6 +37,7 @@ export const getGallery = async (req, res) => {
         res.status(500).json({ message: "Error fetching images", error: error.message });
     }
 };
+
 
 export const uploadImage = async (req, res) => {
     try {

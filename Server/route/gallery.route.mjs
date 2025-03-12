@@ -8,16 +8,25 @@ GalleryRoute.get("/images", getGallery);
 GalleryRoute.post("/", uploadMiddleware, uploadImage);
 GalleryRoute.delete("/:id", deleteImage);
 GalleryRoute.put("/reorder", async (req, res) => {
-    try {
-      const { images } = req.body; // Array of image IDs in new order
-      for (let i = 0; i < images.length; i++) {
-        await Gallery.updateOne({ _id: images[i] }, { order: i });
+  try {
+    const { images } = req.body; // Array of image IDs in new order
+
+    const bulkOps = images.map((id, index) => ({
+      updateOne: {
+        filter: { _id: id },
+        update: { order: index }
       }
-      res.status(200).json({ success: true, message: "Order updated" });
-    } catch (error) {
-      res.status(500).json({ error: "Failed to update order" });
-    }
-  });
+    }));
+
+    await Gallery.bulkWrite(bulkOps);
+
+    res.status(200).json({ success: true, message: "Order updated successfully" });
+  } catch (error) {
+    console.error("Error updating order:", error);
+    res.status(500).json({ error: "Failed to update order" });
+  }
+});
+
   
 
 export default GalleryRoute;

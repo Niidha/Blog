@@ -19,12 +19,13 @@ export default function GalleryDashboard() {
   const fetchImages = async () => {
     try {
       const res = await api.get("/gallery/images");
-      setImages(res.data || []); // Ensure it's an array
+      setImages(res.data || []); // Ensure it's sorted
     } catch (error) {
       console.error("Error fetching images", error);
-      setImages([]); // Set to empty array on failure
+      setImages([]);
     }
-  };
+};
+
 
   const uploadImage = async () => {
     if (!title || !imageFile) return;
@@ -60,7 +61,7 @@ export default function GalleryDashboard() {
 
   useEffect(() => {
     if (galleryRef.current && images.length > 0) {
-      Sortable.create(galleryRef.current, {
+      const sortable = Sortable.create(galleryRef.current, {
         animation: 200,
         onEnd: async (event) => {
           if (event.oldIndex === undefined || event.newIndex === undefined) return;
@@ -71,13 +72,8 @@ export default function GalleryDashboard() {
 
           setImages(newOrder);
 
-          // Ensure _id exists before sending to backend
-          const reorderedIds = newOrder.map((img) => img?._id).filter(Boolean);
-          if (reorderedIds.length !== newOrder.length) {
-            console.error("Some images are missing _id, skipping reorder update.");
-            return;
-          }
-
+          // Send new order to backend
+          const reorderedIds = newOrder.map((img) => img._id);
           try {
             await api.put("/gallery/reorder", { images: reorderedIds });
           } catch (error) {
@@ -85,8 +81,11 @@ export default function GalleryDashboard() {
           }
         },
       });
+
+      return () => sortable.destroy(); // Cleanup
     }
-  }, [images]);
+}, [images]);
+
 
   return (
     <AdminLayout>
