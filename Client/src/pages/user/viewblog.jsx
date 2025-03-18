@@ -6,6 +6,7 @@ import parse from "html-react-parser";
 import { io } from "socket.io-client";
 import AuthorLayout from "../author/authorlayout";
 import AdminLayout from "../admin/adminnavbar";
+import Navbar from "../layouts/navbar";
 
 const socket = io("http://localhost:9090", { transports: ["websocket"] });
 
@@ -84,6 +85,7 @@ function ViewMyBlog() {
     const getLayout = () => {
         if (role === "admin") return AdminLayout;
         if (role === "author") return AuthorLayout;
+       
         return React.Fragment; // No layout for others
     };
 

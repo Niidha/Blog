@@ -22,19 +22,23 @@ import AuthorInvitations from "../pages/author/authorinvitations";
 import AdminreviewNotifications from "../pages/admin/adminauthorinvite";
 import Testimonials from "../pages/admin/admintestimonial";
 import GalleryDashboard from "../pages/admin/admingallery";
-import PortfolioForm from "../pages/admin/portfolio/portfolioupload";
+
 import PortfolioDetail from "../pages/admin/portfolio/portfoliodetail";
 import PortfolioList from "../pages/admin/portfolio/portfoliodisplay";
 import PortfolioPost from "../pages/admin/portfolio/portfolioupload";
 import EditPortfolio from "../pages/admin/portfolio/portfolioedit";
+
+import HomePage from "../pages/layouts/homepage";
 
 const Router = () => {
     return (
         <BrowserRouter>
             <Routes>
                 {/* Public Routes */}
-                <Route path="/" element={<BlogList />} />
+                <Route path="/" element={<HomePage />} />
+                <Route path="/blogs" element={<BlogList />} />
                 <Route path="/viewblog/:id" element={<ViewBlog />} />
+             
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/details/:username" element={<AuthorDetails />} />
@@ -56,12 +60,12 @@ const Router = () => {
                 <Route path="/admindashboard" element={<ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
                 <Route path="/adminmanage" element={<ProtectedRoute allowedRoles={["admin"]}><AdminManage /></ProtectedRoute>} />
                 <Route path="/admininviteresponse" element={<ProtectedRoute allowedRoles={["admin"]}><AdminreviewNotifications /></ProtectedRoute>} />
-                <Route path="/admintestimonial" element={<ProtectedRoute allowedRoles={["admin"]}><Testimonials /></ProtectedRoute>} />
-                <Route path="/admingallery" element={<ProtectedRoute allowedRoles={["admin"]}><GalleryDashboard /></ProtectedRoute>} />
+                <Route path="/testimonial" element={<Testimonials />} />
+                <Route path="/gallery" element={<GalleryDashboard />} />
 
                 {/* Portfolio Routes (Admin Only) */}
-                <Route path="/portfolio" element={<ProtectedRoute allowedRoles={["admin"]}><PortfolioList /></ProtectedRoute>} />
-                <Route path="/portfolio/:id" element={<ProtectedRoute allowedRoles={["admin"]}><PortfolioDetail /></ProtectedRoute>} />
+                <Route path="/portfolio" element={<PortfolioList />} />
+                <Route path="/portfolio/:id" element={<PortfolioDetail />} />
                 <Route path="/add" element={<ProtectedRoute allowedRoles={["admin"]}><PortfolioPost /></ProtectedRoute>} />
                 <Route path="/edit/:id" element={<ProtectedRoute allowedRoles={["admin"]}><EditPortfolio /></ProtectedRoute>} />
             </Routes>

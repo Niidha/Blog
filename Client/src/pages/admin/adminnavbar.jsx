@@ -51,9 +51,9 @@ function AdminSidebar({ isOpen, closeSidebar }) {
                 <li><Link to="/admindashboard" className="block py-2 px-4 hover:bg-gray-700 rounded">Dashboard</Link></li>
                 <li><Link to="/adminauthors" className="block py-2 px-4 hover:bg-gray-700 rounded">Authors</Link></li>
                 <li><Link to="/adminblog" className="block py-2 px-4 hover:bg-gray-700 rounded">Blogs</Link></li>
-                <li><Link to="/admingallery" className="block py-2 px-4 hover:bg-gray-700 rounded">Gallery</Link></li>
+                <li><Link to="/gallery" className="block py-2 px-4 hover:bg-gray-700 rounded">Gallery</Link></li>
                 <li><Link to="/portfolio" className="block py-2 px-4 hover:bg-gray-700 rounded">Portfolio</Link></li>
-                <li><Link to="/admintestimonial" className="block py-2 px-4 hover:bg-gray-700 rounded">Testimonials</Link></li>
+                <li><Link to="/testimonial" className="block py-2 px-4 hover:bg-gray-700 rounded">Testimonials</Link></li>
                 <li><Link to="/adminmanage" className="block py-2 px-4 hover:bg-gray-700 rounded">Manage Users</Link></li>
              
             </ul>

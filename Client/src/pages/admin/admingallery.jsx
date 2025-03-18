@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
 import { api } from "../../axios";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import AdminLayout from "./adminnavbar";
@@ -11,6 +12,7 @@ export default function GalleryDashboard() {
   const [imageFile, setImageFile] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const galleryRef = useRef(null);
+  const role = useSelector((state) => state.author.role);
 
   useEffect(() => {
     fetchImages();
@@ -19,13 +21,12 @@ export default function GalleryDashboard() {
   const fetchImages = async () => {
     try {
       const res = await api.get("/gallery/images");
-      setImages(res.data || []); // Ensure it's sorted
+      setImages(res.data || []);
     } catch (error) {
       console.error("Error fetching images", error);
       setImages([]);
     }
-};
-
+  };
 
   const uploadImage = async () => {
     if (!title || !imageFile) return;
@@ -60,7 +61,7 @@ export default function GalleryDashboard() {
   };
 
   useEffect(() => {
-    if (galleryRef.current && images.length > 0) {
+    if (galleryRef.current && images.length > 0 && role === "admin") {
       const sortable = Sortable.create(galleryRef.current, {
         animation: 200,
         onEnd: async (event) => {
@@ -72,7 +73,6 @@ export default function GalleryDashboard() {
 
           setImages(newOrder);
 
-          // Send new order to backend
           const reorderedIds = newOrder.map((img) => img._id);
           try {
             await api.put("/gallery/reorder", { images: reorderedIds });
@@ -82,94 +82,93 @@ export default function GalleryDashboard() {
         },
       });
 
-      return () => sortable.destroy(); // Cleanup
+      return () => sortable.destroy();
     }
-}, [images]);
+  }, [images, role]);
 
+  const GalleryContent = (
+    <div className="p-6 max-w-4xl mx-auto relative">
+      <h1 className="text-3xl font-bold mb-6 text-center">{role === "admin" ? "Gallery Dashboard" : "Gallery"}</h1>
 
-  return (
-    <AdminLayout>
-      <div className="p-6 max-w-4xl mx-auto relative">
-        <h1 className="text-3xl font-bold mb-6 text-center">Gallery Dashboard</h1>
-
-        {/* Add Image Button */}
+      {role === "admin" && (
         <button
           onClick={() => setOpenModal(true)}
           className="bg-blue-500 text-white px-4 py-2 mb-3 rounded-lg flex items-center hover:bg-blue-600"
         >
           <AiOutlinePlus className="mr-2" /> Add Image
         </button>
+      )}
 
-        {/* Image Upload Modal */}
-        {openModal && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-96 mx-auto relative">
-              {/* Close Button */}
+      {openModal && role === "admin" && (
+        <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 z-50">
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96 mx-auto relative">
+            <button
+              onClick={() => setOpenModal(false)}
+              className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+            >
+              <AiOutlineClose size={20} />
+            </button>
+
+            <h2 className="text-lg font-bold mb-4 text-center">Add Image</h2>
+            <div className="mb-6 grid grid-cols-1 gap-4">
+              <input
+                type="text"
+                placeholder="Title"
+                className="border border-gray-300 p-2 rounded w-full"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <input
+                type="file"
+                className="border border-gray-300 p-2 rounded w-full"
+                onChange={(e) => setImageFile(e.target.files[0])}
+              />
+              <input
+                type="text"
+                placeholder="Description"
+                className="border border-gray-300 p-2 rounded w-full"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+              />
               <button
-                onClick={() => setOpenModal(false)}
-                className="absolute top-2 right-2 text-gray-600 hover:text-gray-900"
+                className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
+                onClick={uploadImage}
               >
-                <AiOutlineClose size={20} />
+                Upload Image
               </button>
-
-              <h2 className="text-lg font-bold mb-4 text-center">Add Image</h2>
-              <div className="mb-6 grid grid-cols-1 gap-4">
-                <input
-                  type="text"
-                  placeholder="Title"
-                  className="border border-gray-300 p-2 rounded w-full"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                />
-                <input
-                  type="file"
-                  className="border border-gray-300 p-2 rounded w-full"
-                  onChange={(e) => setImageFile(e.target.files[0])}
-                />
-                <input
-                  type="text"
-                  placeholder="Description"
-                  className="border border-gray-300 p-2 rounded w-full"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-                <button
-                  className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
-                  onClick={uploadImage}
-                >
-                  Upload Image
-                </button>
-              </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Sortable Gallery Display */}
-        <div ref={galleryRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
-          {Array.isArray(images) &&
-            images.map((img, index) =>
-              img ? (
-                <div key={img._id || index} className="shadow-lg rounded-lg overflow-hidden bg-white cursor-pointer">
-                  <img
-                    src={img.imageUrl ? `http://localhost:9090${img.imageUrl}` : "https://via.placeholder.com/150"}
-                    alt={img.title || "No Title"}
-                    className="w-full h-40 object-cover"
-                  />
-                  <div className="p-4">
-                    <h2 className="font-semibold text-lg">{img.title || "Untitled"}</h2>
-                    <p className="text-sm text-gray-500">{img.description || "No description available"}</p>
+      <div ref={galleryRef} className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+        {Array.isArray(images) &&
+          images.map((img, index) => (
+            img ? (
+              <div key={img._id || index} className="shadow-lg rounded-lg overflow-hidden bg-white cursor-pointer">
+                <img
+                  src={img.imageUrl ? `http://localhost:9090${img.imageUrl}` : "https://via.placeholder.com/150"}
+                  alt={img.title || "No Title"}
+                  className="w-full h-40 object-cover"
+                />
+                <div className="p-4">
+                  <h2 className="font-semibold text-lg">{img.title || "Untitled"}</h2>
+                  <p className="text-sm text-gray-500">{img.description || "No description available"}</p>
+                  {role === "admin" && (
                     <button
                       onClick={() => deleteImage(img._id)}
                       className="mt-2 bg-red-500 text-white py-1 px-3 rounded hover:bg-red-600 transition"
                     >
                       Delete
                     </button>
-                  </div>
+                  )}
                 </div>
-              ) : null
-            )}
-        </div>
+              </div>
+            ) : null
+          ))}
       </div>
-    </AdminLayout>
+    </div>
   );
+
+  return role === "admin" ? <AdminLayout>{GalleryContent}</AdminLayout> : GalleryContent;
 }
