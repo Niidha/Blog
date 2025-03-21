@@ -35,4 +35,5 @@ blogrouter.post("/create", Auth, upload.single("image"), async (req, res) => {
         res.status(500).json({ message: "Error creating blog post", error: error.message });
       }
 });
+
 export default blogrouter;

@@ -43,7 +43,7 @@ const PortfolioDetail = () => {
   if (!portfolio) return <p>Loading...</p>;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col mt-15">
       {/* Fix layout space issue */}
       <div className="absolute top-0 left-0 w-full">
         {userRole === "admin" ? <AdminLayout /> : <Navbar />}
@@ -81,12 +81,13 @@ const PortfolioDetail = () => {
 
         {/* Ensure Quill renders only if there is valid content */}
         {portfolio.content && portfolio.content !== "" && (
-          <div className="mb-6">
-            <h2 className="text-xl font-bold mb-2">Content</h2>
-            <div className="border rounded-lg p-4 bg-white shadow-md">
-              <ReactQuill value={portfolio.content} readOnly={true} theme="bubble" className="text-lg" />
-            </div>
-          </div>
+         <div className="mb-6">
+         <h2 className="text-xl font-bold mb-2">Content</h2>
+         <div className="text-lg leading-relaxed">
+           <div dangerouslySetInnerHTML={{ __html: portfolio.content }} />
+         </div>
+       </div>
+       
         )}
 
         {portfolio.videoUrls.length > 0 && (

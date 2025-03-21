@@ -47,7 +47,15 @@ export const getPortfolios = async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 };
-
+export const PortfolioLatest=async (req, res) => {
+    try {
+        const portfolios = await Portfolio.find().sort({ createdAt: -1 }).limit(3);
+        res.status(200).json({ portfolios });
+    } catch (error) {
+        console.error("Error fetching latest portfolios:", error);
+        res.status(500).json({ error: "Error fetching portfolios", details: error.message });
+    }
+}
 // ✅ Get Single Portfolio by ID
 export const getPortfolioById = async (req, res) => {
     try {
@@ -115,3 +123,5 @@ export const deletePortfolio = async (req, res) => {
         res.status(500).json({ message: "Server error", error });
     }
 };
+
+

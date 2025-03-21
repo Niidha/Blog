@@ -4,6 +4,8 @@ import { api } from "../../axios";
 import { AiOutlinePlus, AiOutlineClose } from "react-icons/ai";
 import AdminLayout from "./adminnavbar";
 import Sortable from "sortablejs";
+import Navbar from "../layouts/navbar";
+ // Import Navbar for non-admin users
 
 export default function GalleryDashboard() {
   const [images, setImages] = useState([]);
@@ -170,5 +172,5 @@ export default function GalleryDashboard() {
     </div>
   );
 
-  return role === "admin" ? <AdminLayout>{GalleryContent}</AdminLayout> : GalleryContent;
+  return role === "admin" ? <AdminLayout>{GalleryContent}</AdminLayout> : <><Navbar/>{GalleryContent}</>;
 }

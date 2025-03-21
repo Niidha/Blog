@@ -26,7 +26,14 @@ GalleryRoute.put("/reorder", async (req, res) => {
     res.status(500).json({ error: "Failed to update order" });
   }
 });
-
+GalleryRoute.get("/latest", async (req, res) => {
+  try {
+      const images = await Gallery.find().sort({ createdAt: -1 }).limit(3);
+      res.status(200).json({ images });
+  } catch (error) {
+      res.status(500).json({ error: "Error fetching gallery images", details: error.message });
+  }
+});
   
 
 export default GalleryRoute;

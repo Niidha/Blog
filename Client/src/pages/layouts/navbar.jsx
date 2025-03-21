@@ -16,7 +16,7 @@ export default function Navbar() {
           <li><Link to="/" className="text-gray-700 hover:text-blue-500 transition">Home</Link></li>
           <li><Link to="/blogs" className="text-gray-700 hover:text-blue-500 transition">Blogs</Link></li>
           <li><Link to="/gallery" className="text-gray-700 hover:text-blue-500 transition">Gallery</Link></li>
-          <li><Link to="/testimonials" className="text-gray-700 hover:text-blue-500 transition">Testimonial</Link></li>
+         
           <li><Link to="/portfolio" className="text-gray-700 hover:text-blue-500 transition">Portfolio</Link></li>
           <li><Link to="/contact" className="text-gray-700 hover:text-blue-500 transition">Contact</Link></li>
 
@@ -60,7 +60,7 @@ export default function Navbar() {
             <li><Link to="/" className="text-gray-700 hover:text-blue-500 transition">Home</Link></li>
             <li><Link to="/blogs" className="text-gray-700 hover:text-blue-500 transition">Blogs</Link></li>
             <li><Link to="/gallery" className="text-gray-700 hover:text-blue-500 transition">Gallery</Link></li>
-            <li><Link to="/testimonials" className="text-gray-700 hover:text-blue-500 transition">Testimonial</Link></li>
+         
             <li><Link to="/portfolio" className="text-gray-700 hover:text-blue-500 transition">Portfolio</Link></li>
             <li><Link to="/contact" className="text-gray-700 hover:text-blue-500 transition">Contact</Link></li>
 

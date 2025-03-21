@@ -1,6 +1,9 @@
 import React from "react";
 import Navbar from "./navbar";
 
+import LatestPage from "./latest";
+
+
 export default function HomePage() {
   return (
   <div>
@@ -23,6 +26,7 @@ export default function HomePage() {
         </div>
       </div>
     </div>
+ <LatestPage/>
     </div>
   );
 }
