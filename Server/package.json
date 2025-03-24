@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "main": "app.mjs",
   "scripts": {
-    "start": "nodemon"
-  },
+  "start": "node app.mjs",
+  "dev": "nodemon app.mjs"
+},
   "keywords": [],
   "author": "",
   "license": "ISC",
